@@ -36,7 +36,7 @@ catalog:
   "dotenv-cli": "^11.0.0"
   "eslint": "9.39.3"
   "eslint-plugin-qwik": "1.19.1"
-  "globals": "17.3.0"
+  "globals": "17.4.0"
   "ksuid": "3.0.0"
   "lucia": "^3.2.2"
   "nanoid": "^5.1.6"
