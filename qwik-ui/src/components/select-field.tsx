@@ -33,7 +33,7 @@ export interface SelectFieldProps {
       error: Signal<string | undefined>,
     ) => void
   >;
-  validate$?: QRL<(value: string, error: Signal<string | undefined>) => void>;
+  validate$?: QRL<(value: string) => string | undefined>;
 }
 
 export const SelectField = component$((props: SelectFieldProps) => {
@@ -122,7 +122,7 @@ export const SelectField = component$((props: SelectFieldProps) => {
         aria-required={props.required}
         disabled={disabled.value}
         class={`select ${error.value ? 'select-error' : ''}`}
-        onChange$={(e) => {
+        onChange$={async (e) => {
           const target = e.target as HTMLSelectElement;
           if (props.onChange$) {
             props.onChange$(e, target.value, error);
@@ -134,10 +134,10 @@ export const SelectField = component$((props: SelectFieldProps) => {
             value.value = target.value;
           }
           if (props.validate$) {
-            props.validate$(target.value, error);
+            error.value = await props.validate$(target.value);
           }
         }}
-        onBlur$={(e) => {
+        onBlur$={async (e) => {
           touched.value = true;
           const target = e.target as HTMLSelectElement;
           if (props.onBlur$) {
@@ -150,7 +150,7 @@ export const SelectField = component$((props: SelectFieldProps) => {
             value.value = target.value;
           }
           if (props.validate$) {
-            props.validate$(target.value, error);
+            error.value = await props.validate$(target.value);
           }
         }}
       >

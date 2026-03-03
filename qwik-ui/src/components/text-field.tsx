@@ -39,7 +39,7 @@ export interface TextFieldProps {
       error: Signal<string | undefined>,
     ) => void
   >;
-  validate$?: QRL<(value: string, error: Signal<string | undefined>) => void>;
+  validate$?: QRL<(value: string) => string | undefined>;
 }
 
 export const TextField = component$((props: TextFieldProps) => {
@@ -137,7 +137,7 @@ export const TextField = component$((props: TextFieldProps) => {
           value={value.value}
           class="placeholder:opacity-50"
           placeholder={props.placeholder}
-          onBlur$={(e) => {
+          onBlur$={async (e) => {
             touched.value = true;
             const target = e.target as HTMLInputElement;
             if (props.onBlur$) {
@@ -150,10 +150,10 @@ export const TextField = component$((props: TextFieldProps) => {
               value.value = target.value;
             }
             if (props.validate$) {
-              props.validate$(target.value, error);
+              error.value = await props.validate$(target.value);
             }
           }}
-          onInput$={(e) => {
+          onInput$={async (e) => {
             const target = e.target as HTMLInputElement;
             if (props.onInput$) {
               props.onInput$(e, target.value, error);
@@ -165,7 +165,7 @@ export const TextField = component$((props: TextFieldProps) => {
               value.value = target.value;
             }
             if (props.validate$) {
-              props.validate$(target.value, error);
+              error.value = await props.validate$(target.value);
             }
           }}
         />
