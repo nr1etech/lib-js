@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.1
+### Patch Changes
+
+- 9d60232: Added schema funtion to fields.
+
 ## 2.0.0
 ### Major Changes
 
