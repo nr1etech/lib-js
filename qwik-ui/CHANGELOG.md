@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.5
+### Patch Changes
+
+- 6259784: Fixed valid field
+
 ## 2.0.4
 ### Patch Changes
 
