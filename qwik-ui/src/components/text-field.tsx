@@ -6,6 +6,7 @@ import {
   useSignal,
   useTask$,
 } from '@builder.io/qwik';
+import * as v from 'valibot';
 
 export interface TextFieldProps {
   id?: string;
@@ -40,6 +41,7 @@ export interface TextFieldProps {
     ) => void
   >;
   validate$?: QRL<(value: string) => string | undefined>;
+  schema$?: QRL<() => v.AnySchema>;
 }
 
 export const TextField = component$((props: TextFieldProps) => {
@@ -166,6 +168,19 @@ export const TextField = component$((props: TextFieldProps) => {
             }
             if (props.validate$) {
               error.value = await props.validate$(target.value);
+            }
+            if (props.schema$) {
+              const schema = await props.schema$();
+              const result = v.safeParse(schema, value.value);
+              if (result.success) {
+                error.value = undefined;
+              } else if (result.issues.length > 0) {
+                error.value = (
+                  result.issues[0] as v.BaseIssue<unknown>
+                ).message;
+              } else {
+                error.value = 'Invalid value';
+              }
             }
           }}
         />
