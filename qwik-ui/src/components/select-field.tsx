@@ -14,7 +14,7 @@ export interface SelectFieldProps {
   value?: string | null | Signal<string | null | undefined>;
   error?: string | Signal<string | undefined>;
   required?: boolean;
-  disabled?: boolean;
+  disabled?: boolean | Signal<boolean>;
   onChange$?: QRL<
     (event: Event, value: string, error: Signal<string | undefined>) => void
   >;
@@ -42,6 +42,15 @@ export const SelectField = component$((props: SelectFieldProps) => {
   const value = useSignal<string | null | undefined>(
     typeof props.value === 'string' ? props.value : props.value?.value,
   );
+  const disabled = useSignal<boolean>(false);
+  if (props.disabled) {
+    if (typeof props.disabled === 'boolean') {
+      disabled.value = props.disabled;
+    } else {
+      disabled.value = props.disabled.value;
+    }
+  }
+  // Synchronize local error to props.error
   useTask$(({track}) => {
     if (props.error && typeof props.error !== 'string') {
       track(() => error.value);
@@ -50,6 +59,7 @@ export const SelectField = component$((props: SelectFieldProps) => {
       }
     }
   });
+  // Synchronize props.error to local error
   useTask$(({track}) => {
     if (props.error && typeof props.error !== 'string') {
       track(() => (props.error as Signal).value);
@@ -58,6 +68,7 @@ export const SelectField = component$((props: SelectFieldProps) => {
       }
     }
   });
+  // Synchronize local value to props value
   useTask$(({track}) => {
     if (props.value && typeof props.value !== 'string') {
       track(() => value.value);
@@ -66,11 +77,30 @@ export const SelectField = component$((props: SelectFieldProps) => {
       }
     }
   });
+  // Synchronize props value to local value
   useTask$(({track}) => {
     if (props.value && typeof props.value !== 'string') {
       track(() => (props.value as Signal).value);
       if (props.value && error.value !== props.value.value) {
         value.value = props.value.value;
+      }
+    }
+  });
+  // Synchronize local disabled to props disabled
+  useTask$(({track}) => {
+    if (props.disabled && typeof props.disabled !== 'boolean') {
+      track(() => disabled.value);
+      if (disabled.value !== props.disabled?.value) {
+        props.disabled.value = disabled.value;
+      }
+    }
+  });
+  // Synchronize props disabled to local disabled
+  useTask$(({track}) => {
+    if (props.disabled && typeof props.disabled !== 'boolean') {
+      track(() => (props.disabled as Signal).value);
+      if (props.disabled && disabled.value !== props.disabled.value) {
+        disabled.value = props.disabled.value;
       }
     }
   });
@@ -86,7 +116,7 @@ export const SelectField = component$((props: SelectFieldProps) => {
         {...(props.id && {id: props.id})}
         required={props.required}
         aria-required={props.required}
-        disabled={props.disabled}
+        disabled={disabled.value}
         class={`select ${error.value ? 'select-error' : ''}`}
         onChange$={(e) => {
           const target = e.target as HTMLSelectElement;

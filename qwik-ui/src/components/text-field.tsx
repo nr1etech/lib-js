@@ -16,7 +16,7 @@ export interface TextFieldProps {
   error?: string | Signal<string | undefined>;
   maxLength?: number;
   required?: boolean;
-  disabled?: boolean;
+  disabled?: boolean | Signal<boolean>;
   onBlur$?: QRL<
     (
       event: FocusEvent,
@@ -48,6 +48,16 @@ export const TextField = component$((props: TextFieldProps) => {
   const value = useSignal<string | null | undefined>(
     typeof props.value === 'string' ? props.value : props.value?.value,
   );
+  const disabled = useSignal<boolean>(false);
+  if (props.disabled) {
+    if (typeof props.disabled === 'boolean') {
+      disabled.value = props.disabled;
+    } else {
+      disabled.value = props.disabled.value;
+    }
+  }
+
+  // Synchronize local error to props.error
   useTask$(({track}) => {
     if (props.error && typeof props.error !== 'string') {
       track(() => error.value);
@@ -56,6 +66,7 @@ export const TextField = component$((props: TextFieldProps) => {
       }
     }
   });
+  // Synchronize props.error to local error
   useTask$(({track}) => {
     if (props.error && typeof props.error !== 'string') {
       track(() => (props.error as Signal).value);
@@ -64,6 +75,7 @@ export const TextField = component$((props: TextFieldProps) => {
       }
     }
   });
+  // Synchronize local value to props value
   useTask$(({track}) => {
     if (props.value && typeof props.value !== 'string') {
       track(() => value.value);
@@ -72,6 +84,7 @@ export const TextField = component$((props: TextFieldProps) => {
       }
     }
   });
+  // Synchronize props value to local value
   useTask$(({track}) => {
     if (props.value && typeof props.value !== 'string') {
       track(() => (props.value as Signal).value);
@@ -80,6 +93,25 @@ export const TextField = component$((props: TextFieldProps) => {
       }
     }
   });
+  // Synchronize local disabled to props disabled
+  useTask$(({track}) => {
+    if (props.disabled && typeof props.disabled !== 'boolean') {
+      track(() => disabled.value);
+      if (disabled.value !== props.disabled?.value) {
+        props.disabled.value = disabled.value;
+      }
+    }
+  });
+  // Synchronize props disabled to local disabled
+  useTask$(({track}) => {
+    if (props.disabled && typeof props.disabled !== 'boolean') {
+      track(() => (props.disabled as Signal).value);
+      if (props.disabled && disabled.value !== props.disabled.value) {
+        disabled.value = props.disabled.value;
+      }
+    }
+  });
+
   return (
     <div class="fieldset">
       {props.label && (
@@ -95,7 +127,7 @@ export const TextField = component$((props: TextFieldProps) => {
           {...(props.name && {name: props.name})}
           required={props.required}
           aria-required={props.required}
-          disabled={props.disabled}
+          disabled={disabled.value}
           maxLength={props.maxLength}
           value={value.value}
           class="placeholder:opacity-50"
