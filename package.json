@@ -12,7 +12,7 @@
       "diff": ">=5.2.2",
       "fast-xml-parser": ">=5.3.6",
       "lodash": ">=4.17.23",
-      "minimatch": ">=10.2.2",
+      "minimatch": ">=10.2.3",
       "rollup": ">=4.59.0",
       "serialize-javascript": "^7.0.3",
       "undici": ">=7.18.2"
