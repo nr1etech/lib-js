@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.4
+### Patch Changes
+
+- d0bf60d: Added reset flag to fields
+
 ## 2.0.3
 ### Patch Changes
 
