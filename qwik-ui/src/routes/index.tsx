@@ -31,6 +31,7 @@ import {ThemeSelector} from '../components/theme-selector';
 import {TimeZoneSelector} from '../components/time-zone-selector';
 import {FormatDate} from '../components/format-date';
 import {FormatDateTime} from '../components/format-date-time';
+import * as v from 'valibot';
 
 export default component$(() => {
   const openDialog1 = useSignal(false);
@@ -234,7 +235,10 @@ export default component$(() => {
           <div class="text-2xl">TextField</div>
           <div class="flex flex-wrap gap-4">
             <div class="w-sm">
-              <TextField label="Enter something" />
+              <TextField
+                label="Enter something"
+                schema$={() => v.pipe(v.string(), v.nonEmpty())}
+              />
             </div>
             <div class="w-sm">
               <TextField

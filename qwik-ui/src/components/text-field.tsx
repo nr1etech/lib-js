@@ -149,9 +149,9 @@ export const TextField = component$((props: TextFieldProps) => {
             if (props.onEvent$) {
               props.onEvent$('blur', e, target.value, error);
             }
-            if (props.value && typeof props.value !== 'string') {
-              value.value = target.value;
-            }
+            // if (props.value && typeof props.value !== 'string') {
+            value.value = target.value;
+            // }
             if (props.validate$) {
               error.value = await props.validate$(target.value);
             }
@@ -164,11 +164,11 @@ export const TextField = component$((props: TextFieldProps) => {
             if (props.onEvent$) {
               props.onEvent$('input', e, target.value, error);
             }
-            if (props.value && typeof props.value !== 'string') {
-              value.value = target.value;
-            }
+            // if (props.value && typeof props.value !== 'string') {
+            value.value = target.value;
+            // }
             if (props.validate$) {
-              error.value = await props.validate$(target.value);
+              error.value = await props.validate$(value.value);
             }
             if (props.schema$) {
               const schema = await props.schema$();
@@ -176,6 +176,7 @@ export const TextField = component$((props: TextFieldProps) => {
               if (result.success) {
                 error.value = undefined;
               } else if (result.issues.length > 0) {
+                console.log('Eat me', value.value);
                 error.value = (
                   result.issues[0] as v.BaseIssue<unknown>
                 ).message;
