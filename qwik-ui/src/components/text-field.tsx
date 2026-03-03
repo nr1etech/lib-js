@@ -15,6 +15,8 @@ export interface TextFieldProps {
   placeholder?: string;
   error?: string | Signal<string | undefined>;
   maxLength?: number;
+  required?: boolean;
+  disabled?: boolean;
   onBlur$?: QRL<
     (
       event: FocusEvent,
@@ -91,6 +93,10 @@ export const TextField = component$((props: TextFieldProps) => {
           type="text"
           {...(props.id && {id: props.id})}
           {...(props.name && {name: props.name})}
+          required={props.required}
+          aria-required={props.required}
+          disabled={props.disabled}
+          maxLength={props.maxLength}
           value={value.value}
           class="placeholder:opacity-50"
           placeholder={props.placeholder}

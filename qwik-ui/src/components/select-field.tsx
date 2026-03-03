@@ -13,6 +13,8 @@ export interface SelectFieldProps {
   name?: string;
   value?: string | null | Signal<string | null | undefined>;
   error?: string | Signal<string | undefined>;
+  required?: boolean;
+  disabled?: boolean;
   onChange$?: QRL<
     (event: Event, value: string, error: Signal<string | undefined>) => void
   >;
@@ -82,6 +84,9 @@ export const SelectField = component$((props: SelectFieldProps) => {
       <select
         {...(props.name && {name: props.name})}
         {...(props.id && {id: props.id})}
+        required={props.required}
+        aria-required={props.required}
+        disabled={props.disabled}
         class={`select ${error.value ? 'select-error' : ''}`}
         onChange$={(e) => {
           const target = e.target as HTMLSelectElement;
