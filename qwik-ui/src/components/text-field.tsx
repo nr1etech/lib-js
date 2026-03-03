@@ -43,7 +43,7 @@ export interface TextFieldProps {
   validate$?: QRL<(value: string) => string | undefined>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   schema$?: QRL<() => v.BaseSchema<any, any, any>>;
-  valid$?: Signal<undefined | boolean>;
+  valid?: Signal<undefined | boolean>;
   /**
    * Increment the value of this signal to reset the input to its original value.
    */
@@ -190,20 +190,20 @@ export const TextField = component$((props: TextFieldProps) => {
               const schema = await props.schema$();
               const result = v.safeParse(schema, value.value);
               if (result.success) {
-                if (props.valid$) {
-                  props.valid$.value = true;
+                if (props.valid) {
+                  props.valid.value = true;
                 }
                 error.value = undefined;
               } else if (result.issues.length > 0) {
-                if (props.valid$) {
-                  props.valid$.value = false;
+                if (props.valid) {
+                  props.valid.value = false;
                 }
                 error.value = (
                   result.issues[0] as v.BaseIssue<unknown>
                 ).message;
               } else {
-                if (props.valid$) {
-                  props.valid$.value = false;
+                if (props.valid) {
+                  props.valid.value = false;
                 }
                 error.value = 'Invalid value';
               }
