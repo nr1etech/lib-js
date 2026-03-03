@@ -52,6 +52,15 @@ export default tseslint.config(
   tseslint.configs.recommended,
   qwikEslint9Plugin.configs.recommended,
   {
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-empty-object-type': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'no-useless-assignment': 'warn',
+      'preserve-caught-error': 'warn',
+    },
+  },
+  {
     languageOptions: {
       globals: {
         ...globals.browser,

@@ -41,7 +41,8 @@ export interface TextFieldProps {
     ) => void
   >;
   validate$?: QRL<(value: string) => string | undefined>;
-  schema$?: QRL<() => v.AnySchema>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schema$?: QRL<() => v.BaseSchema<any, any, any>>;
 }
 
 export const TextField = component$((props: TextFieldProps) => {
