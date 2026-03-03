@@ -43,6 +43,11 @@ export interface TextFieldProps {
   validate$?: QRL<(value: string) => string | undefined>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   schema$?: QRL<() => v.BaseSchema<any, any, any>>;
+  valid$?: Signal<undefined | boolean>;
+  /**
+   * Increment the value of this signal to reset the input to its original value.
+   */
+  reset?: Signal<number>;
 }
 
 export const TextField = component$((props: TextFieldProps) => {
@@ -52,6 +57,8 @@ export const TextField = component$((props: TextFieldProps) => {
   const value = useSignal<string | null | undefined>(
     typeof props.value === 'string' ? props.value : props.value?.value,
   );
+  const originalValue =
+    typeof props.value === 'string' ? props.value : props.value?.value;
   const disabled = useSignal<boolean>(false);
   if (props.disabled) {
     if (typeof props.disabled === 'boolean') {
@@ -118,6 +125,15 @@ export const TextField = component$((props: TextFieldProps) => {
     }
   });
 
+  useTask$(async ({track}) => {
+    if (props.reset) {
+      track(() => props.reset?.value);
+      value.value = originalValue;
+      error.value = undefined;
+      touched.value = false;
+    }
+  });
+
   return (
     <div class="fieldset">
       {props.label && (
@@ -174,13 +190,21 @@ export const TextField = component$((props: TextFieldProps) => {
               const schema = await props.schema$();
               const result = v.safeParse(schema, value.value);
               if (result.success) {
+                if (props.valid$) {
+                  props.valid$.value = true;
+                }
                 error.value = undefined;
               } else if (result.issues.length > 0) {
-                console.log('Eat me', value.value);
+                if (props.valid$) {
+                  props.valid$.value = false;
+                }
                 error.value = (
                   result.issues[0] as v.BaseIssue<unknown>
                 ).message;
               } else {
+                if (props.valid$) {
+                  props.valid$.value = false;
+                }
                 error.value = 'Invalid value';
               }
             }

@@ -34,6 +34,10 @@ export interface SelectFieldProps {
     ) => void
   >;
   validate$?: QRL<(value: string) => string | undefined>;
+  /**
+   * Increment the value of this signal to reset the input to its original value.
+   */
+  reset?: Signal<number>;
 }
 
 export const SelectField = component$((props: SelectFieldProps) => {
@@ -43,6 +47,8 @@ export const SelectField = component$((props: SelectFieldProps) => {
   const value = useSignal<string | null | undefined>(
     typeof props.value === 'string' ? props.value : props.value?.value,
   );
+  const originalValue =
+    typeof props.value === 'string' ? props.value : props.value?.value;
   const disabled = useSignal<boolean>(false);
   if (props.disabled) {
     if (typeof props.disabled === 'boolean') {
@@ -106,6 +112,14 @@ export const SelectField = component$((props: SelectFieldProps) => {
       if (props.disabled && disabled.value !== props.disabled.value) {
         disabled.value = props.disabled.value;
       }
+    }
+  });
+  useTask$(async ({track}) => {
+    if (props.reset) {
+      track(() => props.reset?.value);
+      value.value = originalValue;
+      error.value = undefined;
+      touched.value = false;
     }
   });
   return (
