@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.6
+### Patch Changes
+
+- e566d5d: Refactored validation on fields
+
 ## 2.0.5
 ### Patch Changes
 
