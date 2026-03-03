@@ -10,7 +10,7 @@
       "ajv": "^6.14.0",
       "tmp": ">=0.2.4",
       "diff": ">=5.2.2",
-      "fast-xml-parser": ">=5.3.6",
+      "fast-xml-parser": ">=5.3.8",
       "lodash": ">=4.17.23",
       "minimatch": ">=10.2.3",
       "rollup": ">=4.59.0",
