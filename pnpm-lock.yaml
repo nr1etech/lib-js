@@ -52,8 +52,8 @@ catalogs:
       specifier: 1.19.1
       version: 1.19.1
     '@builder.io/qwik-city':
-      specifier: 1.19.0
-      version: 1.19.0
+      specifier: 1.19.1
+      version: 1.19.1
     '@eslint/js':
       specifier: ^9.39.3
       version: 9.39.3
@@ -466,7 +466,7 @@ importers:
     dependencies:
       '@builder.io/qwik-city':
         specifier: 'catalog:'
-        version: 1.19.0(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(typescript@5.9.3)(yaml@2.8.2)
+        version: 1.19.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(typescript@5.9.3)(yaml@2.8.2)
       '@nr1e/qwik-icons':
         specifier: 'workspace:'
         version: link:../qwik-icons
@@ -918,8 +918,8 @@ packages:
   '@balena/dockerignore@1.0.2':
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
 
-  '@builder.io/qwik-city@1.19.0':
-    resolution: {integrity: sha512-TAXSDRYPXVX4cKKmvMReCDyjjGLnzkCLNQvVfcNPsK/9xSZwUR5AZF22c/XSLv6g17QnWHKSfVdZ1idtncl7LQ==}
+  '@builder.io/qwik-city@1.19.1':
+    resolution: {integrity: sha512-rSwcf1yY/D6UdG5l/AukW9+VLdBIWiyWDQvMWKu52QFGBOKXGoj2WEGtw31RoTuz9N4/hRplfoOPsi0UAPuiCg==}
     engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
 
   '@builder.io/qwik@1.19.1':
@@ -7177,7 +7177,7 @@ snapshots:
 
   '@balena/dockerignore@1.0.2': {}
 
-  '@builder.io/qwik-city@1.19.0(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(typescript@5.9.3)(yaml@2.8.2)':
+  '@builder.io/qwik-city@1.19.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(typescript@5.9.3)(yaml@2.8.2)':
     dependencies:
       '@mdx-js/mdx': 3.1.1
       '@types/mdx': 2.0.13
