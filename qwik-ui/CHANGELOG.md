@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.2
+### Patch Changes
+
+- 69f7241: Refactored schema function to return BaseSchema instead of AnySchema
+
 ## 2.0.1
 ### Patch Changes
 
