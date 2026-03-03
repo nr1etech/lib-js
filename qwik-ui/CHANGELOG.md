@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.3
+### Patch Changes
+
+- 871e475: Fixed schema issue with fields.
+
 ## 2.0.2
 ### Patch Changes
 
