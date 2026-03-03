@@ -39,6 +39,7 @@ export interface TextFieldProps {
       error: Signal<string | undefined>,
     ) => void
   >;
+  validate$?: QRL<(value: string, error: Signal<string | undefined>) => void>;
 }
 
 export const TextField = component$((props: TextFieldProps) => {
@@ -56,6 +57,8 @@ export const TextField = component$((props: TextFieldProps) => {
       disabled.value = props.disabled.value;
     }
   }
+  // Touched is set to true when the user has blurred the input at least once.
+  const touched = useSignal<boolean>(false);
 
   // Synchronize local error to props.error
   useTask$(({track}) => {
@@ -119,7 +122,9 @@ export const TextField = component$((props: TextFieldProps) => {
           <span class="label-text">{props.label}</span>
         </label>
       )}
-      <label class={`input w-full ${error.value ? 'input-error' : ''}`}>
+      <label
+        class={`input w-full ${error.value && touched.value ? 'input-error' : ''}`}
+      >
         <Slot name="left" />
         <input
           type="text"
@@ -133,6 +138,7 @@ export const TextField = component$((props: TextFieldProps) => {
           class="placeholder:opacity-50"
           placeholder={props.placeholder}
           onBlur$={(e) => {
+            touched.value = true;
             const target = e.target as HTMLInputElement;
             if (props.onBlur$) {
               props.onBlur$(e, target.value, error);
@@ -142,6 +148,9 @@ export const TextField = component$((props: TextFieldProps) => {
             }
             if (props.value && typeof props.value !== 'string') {
               value.value = target.value;
+            }
+            if (props.validate$) {
+              props.validate$(target.value, error);
             }
           }}
           onInput$={(e) => {
@@ -155,11 +164,16 @@ export const TextField = component$((props: TextFieldProps) => {
             if (props.value && typeof props.value !== 'string') {
               value.value = target.value;
             }
+            if (props.validate$) {
+              props.validate$(target.value, error);
+            }
           }}
         />
         <Slot name="right" />
       </label>
-      {error.value && <div class="text-error mt-1 text-xs">{error.value}</div>}
+      {error.value && touched.value && (
+        <div class="text-error mt-1 text-xs">{error.value}</div>
+      )}
     </div>
   );
 });

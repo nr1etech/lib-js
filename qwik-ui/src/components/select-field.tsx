@@ -33,6 +33,7 @@ export interface SelectFieldProps {
       error: Signal<string | undefined>,
     ) => void
   >;
+  validate$?: QRL<(value: string, error: Signal<string | undefined>) => void>;
 }
 
 export const SelectField = component$((props: SelectFieldProps) => {
@@ -50,6 +51,9 @@ export const SelectField = component$((props: SelectFieldProps) => {
       disabled.value = props.disabled.value;
     }
   }
+  // Touched is set to true when the user has blurred the input at least once.
+  const touched = useSignal<boolean>(false);
+
   // Synchronize local error to props.error
   useTask$(({track}) => {
     if (props.error && typeof props.error !== 'string') {
@@ -129,8 +133,12 @@ export const SelectField = component$((props: SelectFieldProps) => {
           if (props.value && typeof props.value !== 'string') {
             value.value = target.value;
           }
+          if (props.validate$) {
+            props.validate$(target.value, error);
+          }
         }}
         onBlur$={(e) => {
+          touched.value = true;
           const target = e.target as HTMLSelectElement;
           if (props.onBlur$) {
             props.onBlur$(e, target.value, error);
@@ -140,6 +148,9 @@ export const SelectField = component$((props: SelectFieldProps) => {
           }
           if (props.value && typeof props.value !== 'string') {
             value.value = target.value;
+          }
+          if (props.validate$) {
+            props.validate$(target.value, error);
           }
         }}
       >
