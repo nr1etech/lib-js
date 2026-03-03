@@ -5,6 +5,7 @@ import {
   Signal,
   useSignal,
   useTask$,
+  $,
 } from '@builder.io/qwik';
 import * as v from 'valibot';
 
@@ -40,14 +41,18 @@ export interface TextFieldProps {
       error: Signal<string | undefined>,
     ) => void
   >;
-  validate$?: QRL<(value: string) => string | undefined>;
+  validate$?: QRL<(value: string | null | undefined) => string | undefined>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   schema$?: QRL<() => v.BaseSchema<any, any, any>>;
   valid?: Signal<undefined | boolean>;
   /**
    * Increment the value of this signal to reset the input to its original value.
    */
-  reset?: Signal<number>;
+  triggerReset?: Signal<number>;
+  /**
+   * Increment the value of this signal to force validation to execute.
+   */
+  triggerValidation?: Signal<number>;
 }
 
 export const TextField = component$((props: TextFieldProps) => {
@@ -124,13 +129,58 @@ export const TextField = component$((props: TextFieldProps) => {
       }
     }
   });
-
+  // Watch the reset trigger and reset the field to its original value.
   useTask$(async ({track}) => {
-    if (props.reset) {
-      track(() => props.reset?.value);
+    if (props.triggerReset) {
+      track(() => props.triggerReset?.value);
       value.value = originalValue;
       error.value = undefined;
       touched.value = false;
+    }
+  });
+
+  const validate = $(async () => {
+    if (props.schema$) {
+      const schema = await props.schema$();
+      const result = v.safeParse(schema, value.value);
+      if (!result.success) {
+        if (result.issues.length > 0) {
+          if (props.valid) {
+            props.valid.value = false;
+          }
+          error.value = (result.issues[0] as v.BaseIssue<unknown>).message;
+          return;
+        } else {
+          if (props.valid) {
+            props.valid.value = false;
+          }
+          error.value = 'Invalid value';
+          return;
+        }
+      }
+    }
+    if (props.validate$) {
+      const result = await props.validate$(value.value);
+      if (result) {
+        if (props.valid) {
+          props.valid.value = false;
+        }
+        error.value = result;
+        return;
+      }
+    }
+    if (props.valid) {
+      props.valid.value = true;
+      error.value = undefined;
+    }
+  });
+
+  // Watch the validation trigger and force validation to execute.
+  useTask$(async ({track}) => {
+    if (props.triggerValidation) {
+      track(() => props.triggerValidation?.value);
+      touched.value = true;
+      await validate();
     }
   });
 
@@ -157,56 +207,26 @@ export const TextField = component$((props: TextFieldProps) => {
           class="placeholder:opacity-50"
           placeholder={props.placeholder}
           onBlur$={async (e) => {
-            touched.value = true;
             const target = e.target as HTMLInputElement;
+            touched.value = true;
+            value.value = target.value;
+            await validate();
             if (props.onBlur$) {
               props.onBlur$(e, target.value, error);
             }
             if (props.onEvent$) {
               props.onEvent$('blur', e, target.value, error);
             }
-            // if (props.value && typeof props.value !== 'string') {
-            value.value = target.value;
-            // }
-            if (props.validate$) {
-              error.value = await props.validate$(target.value);
-            }
           }}
           onInput$={async (e) => {
             const target = e.target as HTMLInputElement;
+            value.value = target.value;
+            await validate();
             if (props.onInput$) {
               props.onInput$(e, target.value, error);
             }
             if (props.onEvent$) {
               props.onEvent$('input', e, target.value, error);
-            }
-            // if (props.value && typeof props.value !== 'string') {
-            value.value = target.value;
-            // }
-            if (props.validate$) {
-              error.value = await props.validate$(value.value);
-            }
-            if (props.schema$) {
-              const schema = await props.schema$();
-              const result = v.safeParse(schema, value.value);
-              if (result.success) {
-                if (props.valid) {
-                  props.valid.value = true;
-                }
-                error.value = undefined;
-              } else if (result.issues.length > 0) {
-                if (props.valid) {
-                  props.valid.value = false;
-                }
-                error.value = (
-                  result.issues[0] as v.BaseIssue<unknown>
-                ).message;
-              } else {
-                if (props.valid) {
-                  props.valid.value = false;
-                }
-                error.value = 'Invalid value';
-              }
             }
           }}
         />

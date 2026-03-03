@@ -1,4 +1,5 @@
 import {
+  $,
   component$,
   QRL,
   Signal,
@@ -6,6 +7,7 @@ import {
   useSignal,
   useTask$,
 } from '@builder.io/qwik';
+import * as v from 'valibot';
 
 export interface SelectFieldProps {
   id?: string;
@@ -33,11 +35,18 @@ export interface SelectFieldProps {
       error: Signal<string | undefined>,
     ) => void
   >;
-  validate$?: QRL<(value: string) => string | undefined>;
+  validate$?: QRL<(value: string | null | undefined) => string | undefined>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schema$?: QRL<() => v.BaseSchema<any, any, any>>;
+  valid?: Signal<undefined | boolean>;
   /**
    * Increment the value of this signal to reset the input to its original value.
    */
-  reset?: Signal<number>;
+  triggerReset?: Signal<number>;
+  /**
+   * Increment the value of this signal to force validation to execute.
+   */
+  triggerValidation?: Signal<number>;
 }
 
 export const SelectField = component$((props: SelectFieldProps) => {
@@ -115,13 +124,59 @@ export const SelectField = component$((props: SelectFieldProps) => {
     }
   });
   useTask$(async ({track}) => {
-    if (props.reset) {
-      track(() => props.reset?.value);
+    if (props.triggerReset) {
+      track(() => props.triggerReset?.value);
       value.value = originalValue;
       error.value = undefined;
       touched.value = false;
     }
   });
+
+  const validate = $(async () => {
+    if (props.schema$) {
+      const schema = await props.schema$();
+      const result = v.safeParse(schema, value.value);
+      if (!result.success) {
+        if (result.issues.length > 0) {
+          if (props.valid) {
+            props.valid.value = false;
+          }
+          error.value = (result.issues[0] as v.BaseIssue<unknown>).message;
+          return;
+        } else {
+          if (props.valid) {
+            props.valid.value = false;
+          }
+          error.value = 'Invalid value';
+          return;
+        }
+      }
+    }
+    if (props.validate$) {
+      const result = await props.validate$(value.value);
+      if (result) {
+        if (props.valid) {
+          props.valid.value = false;
+        }
+        error.value = result;
+        return;
+      }
+    }
+    if (props.valid) {
+      props.valid.value = true;
+      error.value = undefined;
+    }
+  });
+
+  // Watch the validation trigger and force validation to execute.
+  useTask$(async ({track}) => {
+    if (props.triggerValidation) {
+      track(() => props.triggerValidation?.value);
+      touched.value = true;
+      await validate();
+    }
+  });
+
   return (
     <div class="fieldset">
       {props.label && (
