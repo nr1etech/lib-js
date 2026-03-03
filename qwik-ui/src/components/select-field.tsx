@@ -9,7 +9,7 @@ import {
 
 export interface SelectFieldProps {
   id?: string;
-  label: string;
+  label?: string;
   name?: string;
   value?: string | null | Signal<string | null | undefined>;
   error?: string | Signal<string | undefined>;
@@ -74,9 +74,11 @@ export const SelectField = component$((props: SelectFieldProps) => {
   });
   return (
     <div class="fieldset">
-      <label class="label" {...(props.id && {for: props.id})}>
-        <span class="label-text">{props.label}</span>
-      </label>
+      {props.label && (
+        <label class="label" {...(props.id && {for: props.id})}>
+          <span class="label-text">{props.label}</span>
+        </label>
+      )}
       <select
         {...(props.name && {name: props.name})}
         {...(props.id && {id: props.id})}

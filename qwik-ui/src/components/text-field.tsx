@@ -9,7 +9,7 @@ import {
 
 export interface TextFieldProps {
   id?: string;
-  label: string;
+  label?: string;
   name?: string;
   value?: string | null | Signal<string | null | undefined>;
   placeholder?: string;
@@ -80,9 +80,11 @@ export const TextField = component$((props: TextFieldProps) => {
   });
   return (
     <div class="fieldset">
-      <label class="label" {...(props.id && {for: props.id})}>
-        <span class="label-text">{props.label}</span>
-      </label>
+      {props.label && (
+        <label class="label" {...(props.id && {for: props.id})}>
+          <span class="label-text">{props.label}</span>
+        </label>
+      )}
       <label class={`input w-full ${error.value ? 'input-error' : ''}`}>
         <Slot name="left" />
         <input
