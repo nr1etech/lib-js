@@ -1,5 +1,13 @@
 # @nr1e/qwik-ui
 
+## 1.0.5
+### Patch Changes
+
+- 63c2570: Added validate function to fields.
+- 0b4df2e: Added disabled and required properties to fields
+- dafc78c: Modified fields to make label optional
+- 3000574: Added ability for disabled to be a signal
+
 ## 1.0.4
 ### Patch Changes
 
