@@ -91,7 +91,7 @@ jobs:
           username: ${{ secrets.docker_hub_username }}
           password: ${{ secrets.docker_hub_password }}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         if: inputs.use_remote == false
       - name: Setup local buildx
         uses: docker/setup-buildx-action@v4
