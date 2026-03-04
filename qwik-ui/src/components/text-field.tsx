@@ -199,9 +199,13 @@ export const TextField = component$((props: TextFieldProps) => {
     if (props.triggerReset) {
       track(() => props.triggerReset?.value);
       if (originalTriggerResetValue !== props.triggerReset.value) {
-        value.value = originalValue;
-        error.value = undefined;
-        touched.value = false;
+        // This hides the reset from the user so they user doesn't see the
+        // reset occur on things like a dialog close.
+        setTimeout(() => {
+          value.value = originalValue;
+          error.value = undefined;
+          touched.value = false;
+        }, 300);
       }
     }
   });
