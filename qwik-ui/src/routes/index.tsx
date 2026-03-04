@@ -42,6 +42,7 @@ export default component$(() => {
   const dialog3Error = useSignal<string | undefined>(undefined);
   const dialog3Warning = useSignal<string | undefined>(undefined);
   const textFieldValue = useSignal<string | undefined | null>();
+  const textFieldValue2 = useSignal<string | undefined | null>();
   const selectedFieldValue = useSignal<string | undefined | null>();
   const checkedFieldValue = useSignal<boolean>(false);
   const autoDismissVisible = useSignal<boolean>(true);
@@ -237,7 +238,10 @@ export default component$(() => {
             <div class="w-sm">
               <TextField
                 label="Enter something"
-                schema$={() => v.pipe(v.string(), v.nonEmpty())}
+                schema$={() =>
+                  v.pipe(v.string(), v.nonEmpty('May not be empty'))
+                }
+                value={textFieldValue2}
               />
             </div>
             <div class="w-sm">

@@ -137,6 +137,8 @@ export const TextField = component$((props: TextFieldProps) => {
   }
   // Touched is set to true when the user has blurred the input at least once.
   const touched = useSignal<boolean>(false);
+  const originalTriggerResetValue = props.triggerReset?.value;
+  const originalTriggerValidationValue = props.triggerValidation?.value;
 
   // Synchronize local error to props.error
   useTask$(({track}) => {
@@ -196,9 +198,11 @@ export const TextField = component$((props: TextFieldProps) => {
   useTask$(async ({track}) => {
     if (props.triggerReset) {
       track(() => props.triggerReset?.value);
-      value.value = originalValue;
-      error.value = undefined;
-      touched.value = false;
+      if (originalTriggerResetValue !== props.triggerReset.value) {
+        value.value = originalValue;
+        error.value = undefined;
+        touched.value = false;
+      }
     }
   });
 
@@ -252,8 +256,10 @@ export const TextField = component$((props: TextFieldProps) => {
   useTask$(async ({track}) => {
     if (props.triggerValidation) {
       track(() => props.triggerValidation?.value);
-      touched.value = true;
-      await validate();
+      if (props.triggerValidation.value !== originalTriggerValidationValue) {
+        touched.value = true;
+        await validate();
+      }
     }
   });
 
