@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.7
+### Patch Changes
+
+- 3b0eaee: Refactored validation on TextField
+
 ## 2.0.6
 ### Patch Changes
 
