@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.9
+### Patch Changes
+
+- f35da3a: Added reset timeout to TextField
+
 ## 2.0.8
 ### Patch Changes
 
