@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.8
+### Patch Changes
+
+- e19acce: Fixed validation and reset issues with TextField.
+
 ## 2.0.7
 ### Patch Changes
 
