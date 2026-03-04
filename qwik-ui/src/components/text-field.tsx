@@ -9,8 +9,41 @@ import {
 } from '@builder.io/qwik';
 import * as v from 'valibot';
 
+/**
+ * The type of the input field.
+ */
+export type TextFieldType =
+  | 'text'
+  | 'date'
+  | 'email'
+  | 'number'
+  | 'tel'
+  | 'url';
+
+/**
+ * The result of validating a form input.
+ */
+export type TextFieldValidationResult = {
+  /**
+   * True if validation was successful. False if validation failed.
+   */
+  success: boolean;
+  /**
+   * The error message if validation failed.
+   */
+  error?: string;
+  /**
+   * The normalized value of the input after successful validation.
+   */
+  output: string | null | undefined;
+};
+
+/**
+ * Properties for the TextField component.
+ */
 export interface TextFieldProps {
   id?: string;
+  type?: TextFieldType;
   label?: string;
   name?: string;
   value?: string | null | Signal<string | null | undefined>;
@@ -19,6 +52,9 @@ export interface TextFieldProps {
   maxLength?: number;
   required?: boolean;
   disabled?: boolean | Signal<boolean>;
+  /**
+   * Called when the input loses focus.
+   */
   onBlur$?: QRL<
     (
       event: FocusEvent,
@@ -26,6 +62,9 @@ export interface TextFieldProps {
       error: Signal<string | undefined>,
     ) => void
   >;
+  /**
+   * Called when the input value changes.
+   */
   onInput$?: QRL<
     (
       event: InputEvent,
@@ -33,6 +72,9 @@ export interface TextFieldProps {
       error: Signal<string | undefined>,
     ) => void
   >;
+  /**
+   * Called on blur or input events
+   */
   onEvent$?: QRL<
     (
       type: 'blur' | 'input',
@@ -41,20 +83,41 @@ export interface TextFieldProps {
       error: Signal<string | undefined>,
     ) => void
   >;
-  validate$?: QRL<(value: string | null | undefined) => string | undefined>;
+  /**
+   * Validates the form input. This is called on input and blur events.
+   */
+  validate$?: QRL<
+    (value: string | null | undefined) => TextFieldValidationResult
+  >;
+  /**
+   * Called to validate the form input. This is called on input and blur events
+   * and is an alternative to the validate$ prop.
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   schema$?: QRL<() => v.BaseSchema<any, any, any>>;
+  /**
+   * An optional signal that indicates whether the input is valid.
+   */
   valid?: Signal<undefined | boolean>;
   /**
    * Increment the value of this signal to reset the input to its original value.
    */
   triggerReset?: Signal<number>;
   /**
-   * Increment the value of this signal to force validation to execute.
+   * Increment the value of this signal to force validation to execute. Be
+   * aware that this will also cause the input to be touched, which will
+   * display the error message if one exists.
    */
   triggerValidation?: Signal<number>;
 }
 
+/**
+ * A standardized text input field meant to be used independently or with Qwik
+ * Modular Forms.
+ *
+ * Be aware that the normalized value of the input from validation is reflected
+ * back into the text field automatically on blur.
+ */
 export const TextField = component$((props: TextFieldProps) => {
   const error = useSignal<string | undefined>(
     typeof props.error === 'string' ? props.error : props.error?.value,
@@ -140,6 +203,7 @@ export const TextField = component$((props: TextFieldProps) => {
   });
 
   const validate = $(async () => {
+    // Validate using valibot if a schema was provided.
     if (props.schema$) {
       const schema = await props.schema$();
       const result = v.safeParse(schema, value.value);
@@ -158,15 +222,24 @@ export const TextField = component$((props: TextFieldProps) => {
           return;
         }
       }
+      // Store the normalized value of the input from valibot validation.
+      if (value.value !== result.output) {
+        value.value = result.output;
+      }
     }
+    // Validate using the validate$ prop if provided.
     if (props.validate$) {
       const result = await props.validate$(value.value);
-      if (result) {
+      if (!result.success) {
         if (props.valid) {
           props.valid.value = false;
         }
-        error.value = result;
+        error.value = result.error;
         return;
+      }
+      // Store the normalized value of the input from the validate$ prop.
+      if (value.value !== result.output) {
+        value.value = result.output;
       }
     }
     if (props.valid) {
@@ -196,7 +269,7 @@ export const TextField = component$((props: TextFieldProps) => {
       >
         <Slot name="left" />
         <input
-          type="text"
+          type={props.type || 'text'}
           {...(props.id && {id: props.id})}
           {...(props.name && {name: props.name})}
           required={props.required}
@@ -211,6 +284,8 @@ export const TextField = component$((props: TextFieldProps) => {
             touched.value = true;
             value.value = target.value;
             await validate();
+            // Reflect the normalized value of the input back into the text field on blur.
+            target.value = value.value ?? '';
             if (props.onBlur$) {
               props.onBlur$(e, target.value, error);
             }
