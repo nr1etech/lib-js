@@ -31,7 +31,6 @@ import {ThemeSelector} from '../components/theme-selector';
 import {TimeZoneSelector} from '../components/time-zone-selector';
 import {FormatDate} from '../components/format-date';
 import {FormatDateTime} from '../components/format-date-time';
-import * as v from 'valibot';
 
 export default component$(() => {
   const openDialog1 = useSignal(false);
@@ -41,10 +40,6 @@ export default component$(() => {
   const openDialog4Loading = useSignal(true);
   const dialog3Error = useSignal<string | undefined>(undefined);
   const dialog3Warning = useSignal<string | undefined>(undefined);
-  const textFieldValue = useSignal<string | undefined | null>();
-  const textFieldValue2 = useSignal<string | undefined | null>();
-  const selectedFieldValue = useSignal<string | undefined | null>();
-  const checkedFieldValue = useSignal<boolean>(false);
   const autoDismissVisible = useSignal<boolean>(true);
   const now = useSignal(new Date().toISOString());
   return (
@@ -238,15 +233,6 @@ export default component$(() => {
             <div class="w-sm">
               <TextField
                 label="Enter something"
-                schema$={() =>
-                  v.pipe(v.string(), v.nonEmpty('May not be empty'))
-                }
-                value={textFieldValue2}
-              />
-            </div>
-            <div class="w-sm">
-              <TextField
-                label="Enter something"
                 error="Something bad happened"
               />
             </div>
@@ -273,32 +259,6 @@ export default component$(() => {
                   <MdiAirHorn size={24} />
                 </div>
               </TextField>
-            </div>
-            <div class="w-sm">
-              <TextField
-                label="Enter something on blur"
-                onBlur$={(_, value, error) => {
-                  error.value = `Input value is ${value}`;
-                }}
-              ></TextField>
-            </div>
-            <div class="w-sm">
-              <TextField
-                label="Enter something in input"
-                onInput$={(_, value, error) => {
-                  error.value = `Input value is ${value}`;
-                }}
-              ></TextField>
-            </div>
-            <div class="w-sm">
-              <TextField
-                label="Enter something in input"
-                value={textFieldValue}
-                onInput$={(_, value, error) => {
-                  error.value = `Input value is ${value}`;
-                }}
-              ></TextField>
-              {textFieldValue.value}
             </div>
           </div>
         </div>
@@ -327,48 +287,12 @@ export default component$(() => {
                 <option value="3">Option 3</option>
               </SelectField>
             </div>
-            <div class="w-sm">
-              <SelectField
-                label="Make a selection"
-                onChange$={(_, value, error) => {
-                  error.value = `Selected value is ${value}`;
-                }}
-              >
-                <option value="empty">Select something</option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-              </SelectField>
-            </div>
-            <div class="w-sm">
-              <SelectField
-                value={selectedFieldValue}
-                label="Make a selection"
-                onChange$={(_, value, error) => {
-                  error.value = `Selected value is ${value}`;
-                }}
-              >
-                <option value="empty">Select something</option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-              </SelectField>
-              {selectedFieldValue.value}
-            </div>
           </div>
         </div>
 
         <div class="w-full space-y-2">
           <div class="text-2xl">CheckboxField</div>
           <div class="flex flex-wrap gap-4">
-            <div class="w-sm">
-              <CheckboxField
-                label="Remember me"
-                onClick$={(_, checked) => {
-                  alert('Checked: ' + checked);
-                }}
-              />
-            </div>
             <div class="w-sm">
               <CheckboxField label="Remember me" checked={true} />
             </div>
@@ -378,24 +302,6 @@ export default component$(() => {
                 checked={true}
                 error="You have an error"
               />
-            </div>
-            <div class="w-sm">
-              <CheckboxField
-                label="Remember me"
-                onClick$={(_, checked, error) => {
-                  error.value = checked ? 'Checked' : 'Unchecked';
-                }}
-              />
-            </div>
-            <div class="w-sm">
-              <CheckboxField
-                checked={checkedFieldValue}
-                label="Remember me"
-                onClick$={(_, checked, error) => {
-                  error.value = checked ? 'Checked' : 'Unchecked';
-                }}
-              />
-              {checkedFieldValue.value ? 'Checked' : 'Unchecked'}
             </div>
           </div>
         </div>

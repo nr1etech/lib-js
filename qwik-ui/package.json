@@ -70,7 +70,6 @@
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
     "undici": "catalog:",
-    "valibot": "catalog:",
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:"
