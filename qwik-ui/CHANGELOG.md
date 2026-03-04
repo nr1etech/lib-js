@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.10
+### Patch Changes
+
+- c11e7a2: Simplified field types to be display only
+
 ## 2.0.9
 ### Patch Changes
 
