@@ -36,11 +36,11 @@ export interface TextFieldProps {
   /**
    * Called when the input loses focus.
    */
-  onBlur$?: QRL<(event: FocusEvent) => void>;
+  onBlur$?: QRL<(event: FocusEvent, element: HTMLInputElement) => void>;
   /**
    * Called when the input value changes.
    */
-  onInput$?: QRL<(event: InputEvent) => void>;
+  onInput$?: QRL<(event: InputEvent, element: HTMLInputElement) => void>;
 }
 
 /**
