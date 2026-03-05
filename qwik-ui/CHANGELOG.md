@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.13
+### Patch Changes
+
+- ccf031f: Refactored text-field
+
 ## 2.0.12
 ### Patch Changes
 
