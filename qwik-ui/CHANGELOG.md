@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.12
+### Patch Changes
+
+- c2106e0: Fixed onChange and onBlur signatures in SelectField
+
 ## 2.0.11
 ### Patch Changes
 
