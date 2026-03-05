@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.11
+### Patch Changes
+
+- 6150488: Fixed onBlur and onInput sigantures
+
 ## 2.0.10
 ### Patch Changes
 
