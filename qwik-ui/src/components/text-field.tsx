@@ -1,11 +1,4 @@
-import {
-  Slot,
-  component$,
-  QRL,
-  Signal,
-  useSignal,
-  useTask$,
-} from '@builder.io/qwik';
+import {Slot, component$, QRL, Signal} from '@builder.io/qwik';
 
 /**
  * The type of the input field.
@@ -46,32 +39,8 @@ export interface TextFieldProps {
 /**
  * A standardized text input field meant to be used independently or with Qwik
  * Modular Forms.
- *
- * Be aware that the normalized value of the input from validation is reflected
- * back into the text field automatically on blur.
  */
 export const TextField = component$((props: TextFieldProps) => {
-  const value = useSignal<string | null | undefined>(
-    typeof props.value === 'string' ? props.value : props.value?.value,
-  );
-  // Synchronize local value to props value
-  useTask$(({track}) => {
-    if (props.value && typeof props.value !== 'string') {
-      track(() => value.value);
-      if (value.value !== props.value?.value) {
-        props.value.value = value.value;
-      }
-    }
-  });
-  // Synchronize props value to local value
-  useTask$(({track}) => {
-    if (props.value && typeof props.value !== 'string') {
-      track(() => (props.value as Signal).value);
-      if (props.value.value !== value.value) {
-        value.value = props.value.value;
-      }
-    }
-  });
   return (
     <div class="fieldset">
       {props.label && (
@@ -89,11 +58,20 @@ export const TextField = component$((props: TextFieldProps) => {
           aria-required={props.required}
           disabled={props.disabled}
           maxLength={props.maxLength}
-          value={value.value}
+          value={
+            typeof props.value === 'string' ? props.value : props.value?.value
+          }
           class="placeholder:opacity-50"
           placeholder={props.placeholder}
           onBlur$={props.onBlur$}
-          onInput$={props.onInput$}
+          onInput$={(event, element) => {
+            if (props.value && typeof props.value !== 'string') {
+              props.value.value = element.value;
+            }
+            if (props.onInput$) {
+              props.onInput$(event, element);
+            }
+          }}
         />
         <Slot name="right" />
       </label>
