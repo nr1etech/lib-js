@@ -15,8 +15,8 @@ export interface SelectFieldProps {
   error?: string;
   required?: boolean;
   disabled?: boolean;
-  onChange$?: QRL<(event: Event) => void>;
-  onBlur$?: QRL<(event: FocusEvent) => void>;
+  onChange$?: QRL<(event: Event, element: HTMLSelectElement) => void>;
+  onBlur$?: QRL<(event: FocusEvent, element: HTMLSelectElement) => void>;
 }
 
 export const SelectField = component$((props: SelectFieldProps) => {
