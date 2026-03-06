@@ -1,5 +1,10 @@
 # @nr1e/commons
 
+## 0.4.6
+### Patch Changes
+
+- 258f45a: Added phone number helper methods and validators
+
 ## 0.4.5
 ### Patch Changes
 
