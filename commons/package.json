@@ -27,9 +27,11 @@
     "@eslint/js": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",
+    "libphonenumber-js": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
+    "valibot": "catalog:",
     "vitest": "catalog:"
   },
   "dependencies": {

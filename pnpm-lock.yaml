@@ -87,6 +87,9 @@ catalogs:
     ksuid:
       specifier: 3.0.0
       version: 3.0.0
+    libphonenumber-js:
+      specifier: ^1.12.26
+      version: 1.12.38
     lucia:
       specifier: ^3.2.2
       version: 3.2.2
@@ -129,6 +132,9 @@ catalogs:
     uuid:
       specifier: ^13.0.0
       version: 13.0.0
+    valibot:
+      specifier: ^1.2.0
+      version: 1.2.0
     vite:
       specifier: 7.3.1
       version: 7.3.1
@@ -278,6 +284,9 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.39.3(jiti@2.6.1)
+      libphonenumber-js:
+        specifier: 'catalog:'
+        version: 1.12.38
       prettier:
         specifier: 'catalog:'
         version: 3.8.1
@@ -287,6 +296,9 @@ importers:
       typescript-eslint:
         specifier: 'catalog:'
         version: 8.56.1(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
+      valibot:
+        specifier: 'catalog:'
+        version: 1.2.0(typescript@5.9.3)
       vitest:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(yaml@2.8.2)
@@ -4103,6 +4115,9 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  libphonenumber-js@1.12.38:
+    resolution: {integrity: sha512-vwzxmasAy9hZigxtqTbFEwp8ZdZ975TiqVDwj5bKx5sR+zi5ucUQy9mbVTkKM9GzqdLdxux/hTw2nmN5J7POMA==}
 
   lightningcss-android-arm64@1.31.1:
     resolution: {integrity: sha512-HXJF3x8w9nQ4jbXRiNppBCqeZPIAfUo8zE/kOEGbW5NZvGc/K7nMxbhIr+YlFlHW5mpbg/YFPdbnCh1wAXCKFg==}
@@ -10419,6 +10434,8 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  libphonenumber-js@1.12.38: {}
 
   lightningcss-android-arm64@1.31.1:
     optional: true
