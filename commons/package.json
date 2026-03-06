@@ -1,7 +1,7 @@
 {
   "name": "@nr1e/commons",
   "description": "Common utilities for TypeScript projects",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "type": "module",
   "author": "NR1E, Inc.",
   "publishConfig": {
