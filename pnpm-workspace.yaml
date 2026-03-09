@@ -52,7 +52,7 @@ catalog:
   "tailwindcss-animated": "2.0.0"
   "testcontainers": "^11.12.0"
   "typescript": "5.9.3"
-  "typescript-eslint": "8.56.1"
+  "typescript-eslint": "8.57.0"
   "undici": "*"
   "uuid": "^13.0.0"
   "valibot": "^1.2.0"
