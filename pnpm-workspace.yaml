@@ -5,7 +5,6 @@ packages:
   - 'gohighlevel'
   - 'logging'
   - 'lucia-adapter-dynamodb'
-  - 'middesk'
   - 'qwik-icons'
   - 'qwik-ui'
   - 'usps'
