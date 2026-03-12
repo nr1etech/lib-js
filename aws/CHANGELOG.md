@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.6
+### Patch Changes
+
+- bd6acab: Added exports for DynamoDB
+
 ## 1.0.5
 ### Patch Changes
 
