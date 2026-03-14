@@ -6,19 +6,19 @@ export interface SubmitButtonProps {
   onClick$?: QRL<(event: Event) => void>;
   id?: string;
   disabled?: boolean;
-  processing?: boolean;
+  submitting?: boolean;
 }
 
 export const SubmitButton = component$((props: SubmitButtonProps) => {
   return (
     <button
-      class={`btn btn-primary ${props.class ?? ''} ${props.processing || props.disabled ? 'disabled' : ''}`}
+      class={`btn btn-primary ${props.submitting || props.disabled ? 'disabled' : ''} `}
       onClick$={props.onClick$}
       id={props.id}
       type="submit"
     >
       <span q:slot="icon"></span>
-      {props.processing && (
+      {props.submitting && (
         <span class="animate-spin">
           <SpinnersBarsRotateFade size={18} />
         </span>
