@@ -11,6 +11,7 @@ export * from './components/fixed-center-bottom';
 export * from './components/format-date';
 export * from './components/format-date-time';
 export * from './components/drop-up';
+export * from './components/fieldset';
 export * from './components/google-sign-in-button';
 export * from './components/gtm';
 export * from './components/menu';
