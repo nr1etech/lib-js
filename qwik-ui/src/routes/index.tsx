@@ -14,7 +14,7 @@ import {
   Nr1eLogoTaglineLightBg,
 } from '@nr1e/qwik-icons';
 import {CheckboxField} from '../components/checkbox-field';
-import {FieldSet} from '../components/fieldset';
+import {Fieldset} from '../components/fieldset';
 import {SelectField} from '../components/select-field';
 import {SubmitButton} from '../components/submit-button';
 import {AddButton} from '../components/add-button';
@@ -309,19 +309,19 @@ export default component$(() => {
         </div>
 
         <div class="w-full space-y-2">
-          <div class="text-2xl">FieldSet</div>
+          <div class="text-2xl">Fieldset</div>
           <div class="flex flex-wrap gap-4">
-            <FieldSet legend="User Information">
+            <Fieldset legend="User Information">
               <div class="space-y-4">
                 <TextField label="Name" placeholder="Enter your name" />
                 <TextField label="Email" placeholder="Enter your email" />
               </div>
-            </FieldSet>
-            <FieldSet>
+            </Fieldset>
+            <Fieldset>
               <div class="space-y-4">
                 <TextField label="Address" placeholder="Enter your address" />
               </div>
-            </FieldSet>
+            </Fieldset>
           </div>
         </div>
 
