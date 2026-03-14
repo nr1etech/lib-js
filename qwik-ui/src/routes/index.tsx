@@ -15,6 +15,7 @@ import {
 } from '@nr1e/qwik-icons';
 import {CheckboxField} from '../components/checkbox-field';
 import {SelectField} from '../components/select-field';
+import {SubmitButton} from '../components/submit-button';
 import {AddButton} from '../components/add-button';
 import {
   DropUp,
@@ -311,6 +312,9 @@ export default component$(() => {
           <div class="flex flex-wrap gap-4 space-y-2 space-x-2">
             <AddButton>Add something</AddButton>
             <AddButton class="btn-primary">Add something</AddButton>
+            <SubmitButton>Submit</SubmitButton>
+            <SubmitButton processing={true}>Processing</SubmitButton>
+            <SubmitButton disabled={true}>Disabled</SubmitButton>
             <GoogleSignInButton />
             <MicrosoftSignInButton />
           </div>
