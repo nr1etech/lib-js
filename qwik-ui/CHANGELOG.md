@@ -1,5 +1,11 @@
 # @nr1e/qwik-ui
 
+## 2.0.14
+### Patch Changes
+
+- 0d95fdd: Added FieldSet
+- 250d414: Added SubmitButton
+
 ## 2.0.13
 ### Patch Changes
 
