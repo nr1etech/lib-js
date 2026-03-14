@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.15
+### Patch Changes
+
+- 3a52714: Fixed Fieldset
+
 ## 2.0.14
 ### Patch Changes
 
