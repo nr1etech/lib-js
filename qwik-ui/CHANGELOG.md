@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.19
+### Patch Changes
+
+- e4d0e42: Fixed SubmitButton to be type submit
+
 ## 2.0.18
 ### Patch Changes
 
