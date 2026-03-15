@@ -16,6 +16,7 @@ export * from './components/drop-up';
 export * from './components/fieldset';
 export * from './components/google-sign-in-button';
 export * from './components/gtm';
+export * from './components/locale-selector';
 export * from './components/menu';
 export * from './components/microsoft-sign-in-button';
 export * from './components/pace-bar';

@@ -1,3 +1,4 @@
+import {paraglideVitePlugin} from '@inlang/paraglide-js';
 import {defineConfig} from 'vite';
 // @ts-ignore
 import pkg from './package.json';
@@ -40,6 +41,10 @@ export default defineConfig(({mode}) => {
     },
 
     plugins: [
+      paraglideVitePlugin({
+        project: './project.inlang',
+        outdir: './src/paraglide',
+      }),
       qwikVite(),
       ...(isDevMode ? [qwikCity()] : []),
       tsconfigPaths({root: '.'}),

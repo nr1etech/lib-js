@@ -1,0 +1,15 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "auto": "Outomaties (Blaaier)",
+  "af": "Afrikaans",
+  "ar": "Arabies",
+  "en": "Engels",
+  "en_GB": "Engels (Verenigde Koninkryk)",
+  "en_US": "Engels (Verenigde State)",
+  "en_ZA": "Engels (Suid-Afrika)",
+  "es": "Spaans",
+  "es_US": "Spaans (Verenigde State)",
+  "fr": "Frans",
+  "fr_CA": "Frans (Kanada)",
+  "fr_FR": "Frans (Frankryk)"
+}

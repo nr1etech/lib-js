@@ -1,4 +1,4 @@
-import {component$, useSignal} from '@builder.io/qwik';
+import {component$, useSignal, useVisibleTask$} from '@builder.io/qwik';
 import {PaceBar} from '../components/pace-bar';
 import {AlertSuccess} from '../components/alert-success';
 import {AlertWarning} from '../components/alert-warning';
@@ -34,8 +34,12 @@ import {AutoDismiss} from '../components/auto-dismiss';
 import {GoogleSignInButton} from '../components/google-sign-in-button';
 import {MicrosoftSignInButton} from '../components/microsoft-sign-in-button';
 import {Dock, DockLink, DockLabel, DockButton} from '../components/dock';
-import {ThemeSelector} from '../components/theme-selector';
-import {TimeZoneSelector} from '../components/time-zone-selector';
+import {ThemeSelector, themeToName} from '../components/theme-selector';
+import {
+  TimeZoneSelector,
+  timeZoneToName,
+} from '../components/time-zone-selector';
+import {LocaleSelector, localeToName} from '../components/locale-selector';
 import {FormatDate} from '../components/format-date';
 import {FormatDateTime} from '../components/format-date-time';
 
@@ -52,6 +56,26 @@ export default component$(() => {
   const processing = useSignal(false);
   const refreshing = useSignal(false);
   const reloading = useSignal(false);
+
+  // Signals to hold localStorage values for selectors
+  const selectedTheme = useSignal<string>('auto');
+  const selectedTimeZone = useSignal<string>('auto');
+  const selectedLocale = useSignal<string>('auto');
+  const displayLocale = useSignal<string>('en');
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(() => {
+    // Read values from localStorage on component mount
+    selectedTheme.value = localStorage.getItem('theme') ?? 'auto';
+    selectedTimeZone.value = localStorage.getItem('timezone') ?? 'auto';
+    const savedLocale = localStorage.getItem('locale') ?? 'auto';
+    selectedLocale.value = savedLocale;
+
+    // Map full locale codes (en-US) to paraglide locale codes (en)
+    const baseCode = savedLocale.split('-')[0]?.toLowerCase();
+    const validLocales = ['af', 'de', 'en', 'es', 'fr', 'nl'];
+    displayLocale.value = validLocales.includes(baseCode) ? baseCode : 'en';
+  });
   return (
     <div class="flex flex-col items-center p-4">
       <Nr1eLogoTaglineLightBg height={96} />
@@ -70,8 +94,45 @@ export default component$(() => {
       <div class="flex w-full max-w-4xl flex-col space-y-6 pb-[200px]">
         <div class="w-full space-y-2">
           <div class="text-2xl">Selectors</div>
-          <ThemeSelector />
-          <TimeZoneSelector />
+          <div class="flex flex-wrap gap-4">
+            <div class="flex flex-col">
+              <ThemeSelector
+                onValueChange$={(theme) => {
+                  selectedTheme.value = theme;
+                }}
+              />
+              <div class="px-2 text-sm opacity-70">
+                Selected: {themeToName(selectedTheme.value)}
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <TimeZoneSelector
+                onValueChange$={(timezone) => {
+                  selectedTimeZone.value = timezone;
+                }}
+              />
+              <div class="px-2 text-sm opacity-70">
+                Selected: {timeZoneToName(selectedTimeZone.value)}
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <LocaleSelector
+                onValueChange$={(locale) => {
+                  selectedLocale.value = locale;
+                  // Update display locale based on the selected locale
+                  const baseCode = locale.split('-')[0]?.toLowerCase();
+                  const validLocales = ['af', 'ar', 'en', 'es', 'fr', 'nl'];
+                  displayLocale.value = validLocales.includes(baseCode)
+                    ? baseCode
+                    : 'en';
+                }}
+              />
+              <div class="px-2 text-sm opacity-70">
+                Selected:{' '}
+                {localeToName(selectedLocale.value, displayLocale.value as any)}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="w-full space-y-2">
