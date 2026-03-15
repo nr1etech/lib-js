@@ -6,14 +6,16 @@ import {
 } from '@builder.io/qwik';
 import {MdiChevronDown, SpinnersBarsRotateFade} from '@nr1e/qwik-icons';
 import * as allMessages from '../paraglide/messages.js';
-import {type Locale} from '../paraglide/runtime.js';
+import {locales, type Locale} from '../paraglide/runtime.js';
 
 // Map full locale codes (en-US) to paraglide locale codes (en)
 function toParaglideLocale(locale: string): Locale {
   const baseCode = locale.split('-')[0]?.toLowerCase();
-  // Paraglide locales: "af","de","en","es","fr","nl"
-  const validLocales = ['af', 'de', 'en', 'es', 'fr', 'nl'];
-  if (validLocales.includes(baseCode)) {
+  // Get valid base codes from paraglide runtime locales
+  const validBaseCodes = [
+    ...new Set(locales.map((l) => l.split('-')[0].toLowerCase())),
+  ];
+  if (validBaseCodes.includes(baseCode)) {
     return baseCode as Locale;
   }
   return 'en' as Locale;
