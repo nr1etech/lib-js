@@ -51,8 +51,6 @@ export const Button = component$((props: ButtonProps) => {
   } = props;
 
   const isDisabled = processing || disabled;
-  const displayIcon = processing ? SpinnersBarsFade : icon;
-  const displayIconClass = processing ? 'animate-spin' : iconClass;
 
   return (
     <button
@@ -62,15 +60,17 @@ export const Button = component$((props: ButtonProps) => {
       onClick$={!isDisabled && onClick$ ? onClick$ : undefined}
       {...buttonProps}
     >
-      <>
-        {displayIcon ? (
-          <span class={displayIconClass}>
-            <displayIcon size={iconSize ?? 18} />
-          </span>
-        ) : (
-          <span class={displayIconClass} q:slot="icon"></span>
-        )}
-      </>
+      {processing ? (
+        <span class="animate-spin">
+          <SpinnersBarsFade size={iconSize ?? 18} />
+        </span>
+      ) : props.icon ? (
+        <span class={props.iconClass}>
+          <props.icon size={iconSize ?? 18} />
+        </span>
+      ) : (
+        <span class={props.iconClass} q:slot="icon"></span>
+      )}
       {text ? text : <Slot />}
     </button>
   );
