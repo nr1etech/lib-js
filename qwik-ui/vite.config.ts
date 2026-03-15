@@ -1,5 +1,4 @@
 import {paraglideVitePlugin} from '@inlang/paraglide-js';
-import {join} from 'node:path';
 import {defineConfig} from 'vite';
 // @ts-ignore
 import pkg from './package.json';
@@ -8,6 +7,7 @@ import {qwikCity} from '@builder.io/qwik-city/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 // @ts-ignore
 import tailwindcss from '@tailwindcss/vite';
+import * as path from 'path';
 const {dependencies = {}, peerDependencies = {}} = pkg as any;
 const makeRegex = (dep) => new RegExp(`^${dep}(/.*)?$`);
 const excludeAll = (obj) => Object.keys(obj).map(makeRegex);
@@ -43,8 +43,8 @@ export default defineConfig(({mode}) => {
 
     plugins: [
       paraglideVitePlugin({
-        project: join(import.meta.dirname, 'project.inlang'),
-        outdir: join(import.meta.dirname, 'src/paraglide'),
+        project: path.join(import.meta.dirname, 'project.inlang'),
+        outdir: path.join(import.meta.dirname, 'src/paraglide'),
       }),
       qwikVite(),
       ...(isDevMode ? [qwikCity()] : []),
