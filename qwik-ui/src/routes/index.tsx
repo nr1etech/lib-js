@@ -331,7 +331,7 @@ export default component$(() => {
             <AddButton>Add something</AddButton>
             <AddButton class="btn-primary">Add something</AddButton>
             <SubmitButton>Submit</SubmitButton>
-            <SubmitButton processing={true}>Processing</SubmitButton>
+            <SubmitButton submitting={true}>Submitting</SubmitButton>
             <SubmitButton disabled={true}>Disabled</SubmitButton>
             <GoogleSignInButton />
             <MicrosoftSignInButton />

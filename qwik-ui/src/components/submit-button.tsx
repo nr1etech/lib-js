@@ -16,6 +16,7 @@ export const SubmitButton = component$((props: SubmitButtonProps) => {
       onClick$={props.onClick$}
       id={props.id}
       type="submit"
+      disabled={props.submitting || props.disabled}
     >
       <span q:slot="icon"></span>
       {props.submitting && (
