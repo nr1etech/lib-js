@@ -19,10 +19,6 @@ export interface SubmitButtonProps {
    */
   disabled?: boolean;
   /**
-   * Type of the button. Default is 'button'.
-   */
-  type?: 'button' | 'submit' | 'reset';
-  /**
    * Text to display on the button. Default is 'Submit'.
    */
   text?: string;
@@ -38,6 +34,7 @@ export const SubmitButton = component$((props: SubmitButtonProps) => {
       {...props}
       class={`btn-primary ${props.class ?? ''}`}
       text={props.text || 'Submit'}
+      type="submit"
       processing={props.submitting}
     />
   );
