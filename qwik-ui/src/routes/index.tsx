@@ -94,7 +94,7 @@ export default component$(() => {
           <button class="btn btn-primary">View Menu Demo</button>
         </a>
       </div>
-      <div class="flex w-full max-w-4xl flex-col space-y-6 pb-[200px]">
+      <div class="flex w-full max-w-4xl flex-col space-y-6 pb-50">
         <div class="w-full space-y-2">
           <div class="text-2xl">Selectors</div>
           <div class="flex flex-wrap gap-4">
@@ -132,7 +132,10 @@ export default component$(() => {
               />
               <div class="px-2 text-sm opacity-70">
                 Selected:{' '}
-                {localeToName(selectedLocale.value, displayLocale.value as any)}
+                {localeToName(
+                  selectedLocale.value,
+                  displayLocale.value as never,
+                )}
               </div>
             </div>
           </div>
