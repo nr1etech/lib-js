@@ -19,6 +19,7 @@ export * from './components/gtm';
 export * from './components/menu';
 export * from './components/microsoft-sign-in-button';
 export * from './components/pace-bar';
+export * from './components/radio-field';
 export * from './components/refresh-button';
 export * from './components/select-field';
 export * from './components/submit-button';
