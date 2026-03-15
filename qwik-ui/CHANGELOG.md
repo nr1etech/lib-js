@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.17
+### Patch Changes
+
+- 345758a: Added icon to TextField
+
 ## 2.0.16
 ### Patch Changes
 
