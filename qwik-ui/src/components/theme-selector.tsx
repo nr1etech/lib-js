@@ -5,13 +5,39 @@ import {
   type QRL,
 } from '@builder.io/qwik';
 import {MdiChevronDown, SpinnersBarsRotateFade} from '@nr1e/qwik-icons';
+import * as allMessages from '../paraglide/messages.js';
+import {type Locale} from '../paraglide/runtime.js';
 
-function capitalizeFirstLetter(input: string): string {
-  return input.charAt(0).toUpperCase() + input.slice(1);
+// Map full locale codes (en-US) to paraglide locale codes (en)
+function toParaglideLocale(locale: string): Locale {
+  const baseCode = locale.split('-')[0]?.toLowerCase();
+  // Paraglide locales: "af","de","en","es","fr","nl"
+  const validLocales = ['af', 'de', 'en', 'es', 'fr', 'nl'];
+  if (validLocales.includes(baseCode)) {
+    return baseCode as Locale;
+  }
+  return 'en' as Locale;
 }
 
-export function themeToName(theme: string) {
-  return theme.split('-').map(capitalizeFirstLetter).join(' ');
+export function themeToName(theme: string, displayLocale?: Locale) {
+  const messageKey = `theme_${theme.replace(/-/g, '_')}`;
+  const m = allMessages as any;
+  if (messageKey in m && typeof m[messageKey] === 'function') {
+    if (displayLocale) {
+      return (
+        m[messageKey as keyof typeof m] as (
+          inputs: any,
+          options: {locale: Locale},
+        ) => string
+      )({}, {locale: displayLocale});
+    }
+    return (m[messageKey as keyof typeof m] as () => string)();
+  }
+  // Fallback: capitalize each word
+  return theme
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 }
 
 export const THEMES = [
@@ -72,6 +98,7 @@ export interface ThemeSelectorProps {
  */
 export const ThemeSelector = component$((props?: ThemeSelectorProps) => {
   const currentTheme = useSignal<string | undefined>(undefined);
+  const displayLocale = useSignal<Locale>('en' as Locale);
   const onValueChange = props?.onValueChange$;
 
   // eslint-disable-next-line qwik/no-use-visible-task
@@ -79,13 +106,15 @@ export const ThemeSelector = component$((props?: ThemeSelectorProps) => {
     // Read theme from localStorage on component mount
     const savedTheme = localStorage.getItem('theme');
     currentTheme.value = savedTheme ?? 'auto';
+    const savedLocale = localStorage.getItem('locale');
+    displayLocale.value = toParaglideLocale(savedLocale ?? 'en');
   });
 
   return (
     <div class="dropdown">
       <button role="button" tabIndex={0} class="btn m-1">
         {currentTheme.value !== undefined ? (
-          themeToName(currentTheme.value)
+          themeToName(currentTheme.value, displayLocale.value)
         ) : (
           <SpinnersBarsRotateFade size={18} />
         )}
@@ -100,7 +129,7 @@ export const ThemeSelector = component$((props?: ThemeSelectorProps) => {
                 type="radio"
                 name="theme-dropdown"
                 class="theme-controller btn btn-sm btn-ghost justify-start"
-                aria-label={themeToName(theme)}
+                aria-label={themeToName(theme, displayLocale.value)}
                 value={theme}
                 checked={theme === (currentTheme.value ?? 'auto')}
                 onChange$={() => {

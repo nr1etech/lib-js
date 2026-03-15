@@ -5,13 +5,38 @@ import {
   type QRL,
 } from '@builder.io/qwik';
 import {MdiChevronDown, SpinnersBarsRotateFade} from '@nr1e/qwik-icons';
+import * as allMessages from '../paraglide/messages.js';
+import {type Locale} from '../paraglide/runtime.js';
 
-export function timeZoneToName(timezone: string) {
+// Map full locale codes (en-US) to paraglide locale codes (en)
+function toParaglideLocale(locale: string): Locale {
+  const baseCode = locale.split('-')[0]?.toLowerCase();
+  // Paraglide locales: "af","de","en","es","fr","nl"
+  const validLocales = ['af', 'de', 'en', 'es', 'fr', 'nl'];
+  if (validLocales.includes(baseCode)) {
+    return baseCode as Locale;
+  }
+  return 'en' as Locale;
+}
+
+export function timeZoneToName(timezone: string, displayLocale?: Locale) {
+  const messageKey = `tz_${timezone.replace(/\//g, '_')}`;
+  const m = allMessages as any;
+  if (messageKey in m && typeof m[messageKey] === 'function') {
+    if (displayLocale) {
+      return (
+        m[messageKey as keyof typeof m] as (
+          inputs: any,
+          options: {locale: Locale},
+        ) => string
+      )({}, {locale: displayLocale});
+    }
+    return (m[messageKey as keyof typeof m] as () => string)();
+  }
+  // Fallback: format timezone string
   if (timezone === 'auto') {
     return 'Auto (Browser)';
   }
-
-  // Replace underscores with spaces and format nicely
   const parts = timezone.split('/');
   if (parts.length === 2) {
     return `${parts[0]}/${parts[1].replace(/_/g, ' ')}`;
@@ -86,6 +111,7 @@ export interface TimeZoneSelectorProps {
 
 export const TimeZoneSelector = component$((props?: TimeZoneSelectorProps) => {
   const currentTimeZone = useSignal<string | undefined>(undefined);
+  const displayLocale = useSignal<Locale>('en' as Locale);
   const onValueChange = props?.onValueChange$;
 
   // eslint-disable-next-line qwik/no-use-visible-task
@@ -93,13 +119,15 @@ export const TimeZoneSelector = component$((props?: TimeZoneSelectorProps) => {
     // Read timezone from localStorage on component mount
     const savedTimeZone = localStorage.getItem('timezone');
     currentTimeZone.value = savedTimeZone ?? 'auto';
+    const savedLocale = localStorage.getItem('locale');
+    displayLocale.value = toParaglideLocale(savedLocale ?? 'en');
   });
 
   return (
     <div class="dropdown">
       <button role="button" tabIndex={0} class="btn m-1">
         {currentTimeZone.value !== undefined ? (
-          timeZoneToName(currentTimeZone.value)
+          timeZoneToName(currentTimeZone.value, displayLocale.value)
         ) : (
           <SpinnersBarsRotateFade size={18} />
         )}
@@ -114,7 +142,7 @@ export const TimeZoneSelector = component$((props?: TimeZoneSelectorProps) => {
                 type="radio"
                 name="timezone-dropdown"
                 class="btn btn-sm btn-ghost justify-start"
-                aria-label={timeZoneToName(timezone)}
+                aria-label={timeZoneToName(timezone, displayLocale.value)}
                 value={timezone}
                 checked={timezone === (currentTimeZone.value ?? 'auto')}
                 onChange$={() => {
