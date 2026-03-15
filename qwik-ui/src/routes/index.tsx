@@ -21,7 +21,6 @@ import {SubmitButton} from '../components/submit-button';
 import {AddButton} from '../components/add-button';
 import {Button} from '../components/button';
 import {CancelButton} from '../components/cancel-button';
-import {ProcessingButton} from '../components/processing-button';
 import {RefreshButton} from '../components/refresh-button';
 import {
   DropUp,
@@ -365,7 +364,7 @@ export default component$(() => {
             <Button disabled={true}>Disabled button</Button>
             <CancelButton onClick$={() => alert('Cancelled!')} />
             <CancelButton class="btn-error">Cancel (Error)</CancelButton>
-            <ProcessingButton
+            <Button
               processing={processing.value}
               onClick$={async () => {
                 processing.value = true;
@@ -374,7 +373,7 @@ export default component$(() => {
               }}
             >
               Process data
-            </ProcessingButton>
+            </Button>
             <RefreshButton
               refreshing={refreshing.value}
               onClick$={async () => {

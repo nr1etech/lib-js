@@ -1,5 +1,5 @@
 import {component$, QRL} from '@builder.io/qwik';
-import {ProcessingButton} from './processing-button';
+import {Button} from './button';
 
 export interface SubmitButtonProps {
   /**
@@ -30,7 +30,7 @@ export interface SubmitButtonProps {
 
 export const SubmitButton = component$((props: SubmitButtonProps) => {
   return (
-    <ProcessingButton
+    <Button
       {...props}
       class={`btn-primary ${props.class ?? ''}`}
       text={props.text || 'Submit'}

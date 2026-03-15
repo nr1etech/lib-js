@@ -1,6 +1,6 @@
 import {component$, QRL} from '@builder.io/qwik';
 import {MdiRefresh} from '@nr1e/qwik-icons';
-import {ProcessingButton} from './processing-button';
+import {Button} from './button';
 
 export interface RefreshButtonProps {
   /**
@@ -39,7 +39,7 @@ export interface RefreshButtonProps {
 
 export const RefreshButton = component$((props: RefreshButtonProps) => {
   return (
-    <ProcessingButton
+    <Button
       {...props}
       class={`btn-primary ${props.class ?? ''}`}
       text={props.text || 'Refresh'}

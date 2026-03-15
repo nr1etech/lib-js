@@ -1,26 +1,14 @@
-import {Component, component$, QRL, Slot} from '@builder.io/qwik';
-import {IconProps} from '@nr1e/qwik-icons';
+import {
+  Slot,
+  component$,
+  type Component,
+  type JSXChildren,
+  type PropsOf,
+} from '@builder.io/qwik';
+import type {IconProps} from '@nr1e/qwik-icons';
+import {SpinnersBarsFade} from '@nr1e/qwik-icons';
 
-/**
- * Props for the Button component.
- */
-export interface ButtonProps {
-  /**
-   * ID of the button.
-   */
-  id?: string;
-  /**
-   * CSS class to apply to the button.
-   */
-  class?: string;
-  /**
-   * Callback function to be called when the button is clicked.
-   */
-  onClick$?: QRL<(event: Event) => void | Promise<void>>;
-  /**
-   * Whether the button is disabled.
-   */
-  disabled?: boolean;
+export interface ButtonProps extends Omit<PropsOf<'button'>, 'children'> {
   /**
    * Icon component to display next to the button text. You can alternatively use the `icon` slot.
    */
@@ -34,37 +22,56 @@ export interface ButtonProps {
    */
   iconClass?: string;
   /**
-   * Type of the button. Default is 'button'.
-   */
-  type?: 'button' | 'submit' | 'reset';
-  /**
    * Text to display on the button. Alternative to the `default` slot.
    */
   text?: string;
+  /**
+   * Whether the button is processing. This will replace the icon with a rotating spinner when true.
+   */
+  processing?: boolean;
+  children?: JSXChildren;
 }
 
 /**
  * Button component.
  */
 export const Button = component$((props: ButtonProps) => {
+  const {
+    icon,
+    iconSize,
+    iconClass,
+    text,
+    processing,
+    disabled,
+    type,
+    onClick$,
+    class: className,
+    children,
+    ...buttonProps
+  } = props;
+
+  const isDisabled = processing || disabled;
+  const displayIcon = processing ? SpinnersBarsFade : icon;
+  const displayIconClass = processing ? 'animate-spin' : iconClass;
+
   return (
     <button
-      class={`btn props.disabled ? 'disabled' : ''} ${props.class ?? ''}`}
-      disabled={props.disabled}
-      id={props.id}
-      type={props.type ?? 'button'}
-      onClick$={!props.disabled && props.onClick$ ? props.onClick$ : undefined}
+      class={`btn ${isDisabled ? 'disabled' : ''} ${className ?? ''}`}
+      disabled={isDisabled}
+      type={type ?? 'button'}
+      onClick$={!isDisabled && onClick$ ? onClick$ : undefined}
+      {...buttonProps}
     >
       <>
-        {props.icon ? (
-          <span class={props.iconClass}>
-            <props.icon size={props.iconSize ?? 18} />
+        {displayIcon ? (
+          <span class={displayIconClass}>
+            <displayIcon size={iconSize ?? 18} />
           </span>
         ) : (
-          <span class={props.iconClass} q:slot="icon"></span>
+          <span class={displayIconClass} q:slot="icon"></span>
         )}
       </>
-      {props.text ? props.text : <Slot />}
+      {text ? text : <Slot />}
     </button>
   );
 });
