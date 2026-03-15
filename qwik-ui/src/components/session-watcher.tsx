@@ -24,7 +24,7 @@ export interface SessionWatcherProps {
    * Callback invoked when the user clicks "Extend Session".
    * The parent is responsible for updating dateTime to the new expiry.
    */
-  onExtend$?: QRL<() => void>;
+  onExtendSelected$?: QRL<() => void>;
   /**
    * Callback invoked when the session has expired (either from the timer or if the
    * warning dialog is still open when the expiry time is reached).
@@ -109,8 +109,8 @@ export const SessionWatcher = component$((props: SessionWatcherProps) => {
             class="btn-primary"
             onClick$={async () => {
               dialogOpen.value = false;
-              if (props.onExtend$) {
-                await props.onExtend$();
+              if (props.onExtendSelected$) {
+                await props.onExtendSelected$();
               }
             }}
           />
