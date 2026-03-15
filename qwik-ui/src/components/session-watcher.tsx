@@ -5,6 +5,7 @@ import {
   useSignal,
   useVisibleTask$,
 } from '@builder.io/qwik';
+import {MdiAlertOutline} from '@nr1e/qwik-icons';
 import {Button} from './button';
 import {Dialog} from './dialog';
 import {Timer} from './timer';
@@ -90,9 +91,12 @@ export const SessionWatcher = component$((props: SessionWatcherProps) => {
       />
       <Dialog
         open={dialogOpen}
-        title="Session Expiring Soon"
         showCloseIcon={false}
       >
+        <div q:slot="title" class="flex items-center gap-2 text-lg font-bold">
+          <MdiAlertOutline size={20} />
+          Session Expiring Soon
+        </div>
         <div class="space-y-2">
           <p>
             Your session will expire in{' '}
