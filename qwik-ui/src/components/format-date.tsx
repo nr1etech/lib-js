@@ -1,7 +1,7 @@
 import {component$, useSignal, useVisibleTask$} from '@builder.io/qwik';
 
 function formatDate(
-  date?: string | Date,
+  date: string | Date,
   timeZone?: string,
   locale?: string,
 ): string {
@@ -17,7 +17,7 @@ function formatDate(
 export interface FormatDateProps {
   timeZone?: string | null;
   locale?: string | null;
-  date: Date | string | null;
+  date?: Date | string | null;
 }
 
 export const FormatDate = component$((props: FormatDateProps) => {
