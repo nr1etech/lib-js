@@ -1,5 +1,15 @@
 # @nr1e/qwik-ui
 
+## 2.1.0
+### Minor Changes
+
+- 6be5729: Refactored buttons
+
+### Patch Changes
+
+- 905d52e: Refactored fields and added TextareaField
+- b7a7ff6: Refactored SelectField
+
 ## 2.0.21
 ### Patch Changes
 
