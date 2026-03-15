@@ -1,19 +1,10 @@
-import {
-  component$,
-  isSignal,
-  Signal,
-  Slot,
-  useSignal,
-  useTask$,
-} from '@builder.io/qwik';
+import {component$, isSignal, Signal, Slot, useSignal} from '@builder.io/qwik';
 import {SpinnersBarsFade} from '@nr1e/qwik-icons';
 import {Button, ButtonProps} from './button';
 
 /**
  * Props for the ProcessingButton component. This class will replace the icon
- * with a rotating spinner when the button is processing. It will also
- * automatically set processing to true when the button is clicked. It does
- * not set processing to false when the button is clicked.
+ * with a rotating spinner when clicked.
  */
 export interface ProcessingButtonProps extends ButtonProps {
   /**
@@ -26,46 +17,36 @@ export interface ProcessingButtonProps extends ButtonProps {
  * ProcessingButton component.
  */
 export const ProcessingButton = component$((props: ProcessingButtonProps) => {
-  const externalProcessing = isSignal(props.processing)
-    ? props.processing
-    : undefined;
+  // Always create internal signal, but only use it if no external signal is passed
   const internalProcessing = useSignal<boolean>(
     isSignal(props.processing)
       ? props.processing.value
       : (props.processing ?? false),
   );
+  const processing = isSignal(props.processing)
+    ? props.processing
+    : internalProcessing;
+
   const onClick$ = props.onClick$;
-  // Synchronize props value to local value
-  useTask$(({track}) => {
-    if (externalProcessing) {
-      track(() => externalProcessing.value);
-      if (externalProcessing.value !== internalProcessing.value) {
-        internalProcessing.value = externalProcessing.value;
-      }
-    }
-  });
-  // Synchronize local value to props value
-  useTask$(({track}) => {
-    if (externalProcessing) {
-      track(() => internalProcessing.value);
-      if (externalProcessing.value !== internalProcessing.value) {
-        externalProcessing.value = internalProcessing.value;
-      }
-    }
-  });
+
   return (
     <Button
       {...props}
       class={`${props.processing || props.disabled ? 'disabled' : ''} ${props.class ?? ''}`}
-      disabled={internalProcessing.value || props.disabled}
+      disabled={processing.value || props.disabled}
       onClick$={(e: Event) => {
-        internalProcessing.value = true;
+        processing.value = true;
         if (onClick$) {
-          onClick$(e);
+          const result = onClick$(e);
+          if (result instanceof Promise) {
+            result.finally(() => {
+              processing.value = false;
+            });
+          }
         }
       }}
-      icon={internalProcessing.value ? SpinnersBarsFade : props.icon}
-      iconClass={internalProcessing.value ? 'animate-spin' : props.iconClass}
+      icon={processing.value ? SpinnersBarsFade : props.icon}
+      iconClass={processing.value ? 'animate-spin' : props.iconClass}
     >
       <Slot />
     </Button>

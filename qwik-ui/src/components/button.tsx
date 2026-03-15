@@ -16,7 +16,7 @@ export interface ButtonProps {
   /**
    * Callback function to be called when the button is clicked.
    */
-  onClick$?: QRL<(event: Event) => void>;
+  onClick$?: QRL<(event: Event) => void | Promise<void>>;
   /**
    * Whether the button is disabled.
    */

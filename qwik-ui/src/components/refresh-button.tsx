@@ -1,4 +1,4 @@
-import {component$, QRL, Signal, Slot} from '@builder.io/qwik';
+import {component$, QRL, Signal} from '@builder.io/qwik';
 import {MdiRefresh} from '@nr1e/qwik-icons';
 import {ProcessingButton} from './processing-button';
 
@@ -14,7 +14,7 @@ export interface RefreshButtonProps {
   /**
    * Callback function to be called when the button is clicked.
    */
-  onClick$?: QRL<(event: Event) => void>;
+  onClick$?: QRL<(event: Event) => void | Promise<void>>;
   /**
    * Whether the button is disabled.
    */
