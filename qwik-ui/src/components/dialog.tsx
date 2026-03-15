@@ -51,6 +51,10 @@ export const Dialog = component$((props: DialogProps) => {
         await props.onOpen$(dialog.value);
       }
       internalOpen.value = true;
+      // Scroll to top when dialog opens
+      if (dialog.value) {
+        dialog.value.scrollTop = 0;
+      }
       if (props.onPostOpen$ && dialog.value) {
         await props.onPostOpen$(dialog.value);
       }
