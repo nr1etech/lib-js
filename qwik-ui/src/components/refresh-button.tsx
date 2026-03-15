@@ -1,4 +1,4 @@
-import {component$, QRL, Signal} from '@builder.io/qwik';
+import {component$, QRL} from '@builder.io/qwik';
 import {MdiRefresh} from '@nr1e/qwik-icons';
 import {ProcessingButton} from './processing-button';
 
@@ -14,7 +14,7 @@ export interface RefreshButtonProps {
   /**
    * Callback function to be called when the button is clicked.
    */
-  onClick$?: QRL<(event: Event) => void | Promise<void>>;
+  onClick$?: QRL<(event: Event) => void>;
   /**
    * Whether the button is disabled.
    */
@@ -30,7 +30,7 @@ export interface RefreshButtonProps {
   /**
    * Whether the button is processing.
    */
-  refreshing?: boolean | Signal<boolean>;
+  refreshing?: boolean;
   /**
    * Size of the icon in pixels if icon is provided in the props. Default is 18.
    */

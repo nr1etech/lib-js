@@ -344,24 +344,30 @@ export default component$(() => {
             <CancelButton onClick$={() => alert('Cancelled!')} />
             <CancelButton class="btn-error">Cancel (Error)</CancelButton>
             <ProcessingButton
-              processing={processing}
+              processing={processing.value}
               onClick$={async () => {
+                processing.value = true;
                 await new Promise((resolve) => setTimeout(resolve, 2000));
+                processing.value = false;
               }}
             >
               Process data
             </ProcessingButton>
             <RefreshButton
-              refreshing={refreshing}
+              refreshing={refreshing.value}
               onClick$={async () => {
+                refreshing.value = true;
                 await new Promise((resolve) => setTimeout(resolve, 2000));
+                refreshing.value = false;
               }}
             />
             <RefreshButton
-              refreshing={reloading}
+              refreshing={reloading.value}
               text="Reload"
               onClick$={async () => {
+                reloading.value = true;
                 await new Promise((resolve) => setTimeout(resolve, 2000));
+                reloading.value = false;
               }}
             />
             <AddButton>Add something</AddButton>

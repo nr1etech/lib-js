@@ -1,4 +1,4 @@
-import {component$, QRL, Signal} from '@builder.io/qwik';
+import {component$, QRL} from '@builder.io/qwik';
 import {ProcessingButton} from './processing-button';
 
 export interface SubmitButtonProps {
@@ -25,7 +25,7 @@ export interface SubmitButtonProps {
   /**
    * Whether the button is processing.
    */
-  submitting?: boolean | Signal<boolean>;
+  submitting?: boolean;
 }
 
 export const SubmitButton = component$((props: SubmitButtonProps) => {
