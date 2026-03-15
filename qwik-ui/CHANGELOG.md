@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.1.3
+### Patch Changes
+
+- 7fbeea5: Fixed FormatDate and FormatDateTime
+
 ## 2.1.2
 ### Patch Changes
 
