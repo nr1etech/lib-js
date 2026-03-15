@@ -34,7 +34,7 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "prebuild": "prettier --check . && eslint .",
+    "prebuild": "prettier --check . && eslint . && pnpx @inlang/paraglide-js compile --project ./project.inlang --outdir ./src/paraglide",
     "build": "qwik build",
     "build.lib": "vite build --mode lib",
     "build.types": "tsc --emitDeclarationOnly",
