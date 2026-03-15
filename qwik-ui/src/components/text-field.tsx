@@ -1,4 +1,5 @@
-import {Slot, component$, QRL, Signal} from '@builder.io/qwik';
+import {Slot, component$, QRL, Signal, Component} from '@builder.io/qwik';
+import {IconProps} from '@nr1e/qwik-icons';
 
 /**
  * The type of the input field.
@@ -34,6 +35,7 @@ export interface TextFieldProps {
    * Called when the input value changes.
    */
   onInput$?: QRL<(event: InputEvent, element: HTMLInputElement) => void>;
+  icon?: Component<IconProps>;
 }
 
 /**
@@ -41,6 +43,10 @@ export interface TextFieldProps {
  * Modular Forms.
  */
 export const TextField = component$((props: TextFieldProps) => {
+  // Extract only what's needed for onInput$ to avoid serializing the entire props
+  const value = props.value;
+  const onInputHandler = props.onInput$;
+
   return (
     <div class="fieldset">
       {props.label && (
@@ -50,6 +56,7 @@ export const TextField = component$((props: TextFieldProps) => {
       )}
       <label class={`input w-full ${props.error ? 'input-error' : ''}`}>
         <Slot name="left" />
+        {props.icon && <props.icon size={18} class="opacity-50" />}
         <input
           type={props.type || 'text'}
           {...(props.id && {id: props.id})}
@@ -65,11 +72,11 @@ export const TextField = component$((props: TextFieldProps) => {
           placeholder={props.placeholder}
           onBlur$={props.onBlur$}
           onInput$={(event, element) => {
-            if (props.value && typeof props.value !== 'string') {
-              props.value.value = element.value;
+            if (value && typeof value !== 'string') {
+              value.value = element.value;
             }
-            if (props.onInput$) {
-              props.onInput$(event, element);
+            if (onInputHandler) {
+              onInputHandler(event, element);
             }
           }}
         />
