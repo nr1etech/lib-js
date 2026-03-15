@@ -28,7 +28,7 @@
     "styles.css"
   ],
   "engines": {
-    "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
+    "node": ">=20.11.0 || >=21.2.0"
   },
   "private": false,
   "sideEffects": false,

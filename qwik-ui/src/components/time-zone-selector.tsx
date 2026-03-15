@@ -23,12 +23,12 @@ function toParaglideLocale(locale: string): Locale {
 
 export function timeZoneToName(timezone: string, displayLocale?: Locale) {
   const messageKey = `tz_${timezone.replace(/\//g, '_')}`;
-  const m = allMessages as any;
+  const m = allMessages as never;
   if (messageKey in m && typeof m[messageKey] === 'function') {
     if (displayLocale) {
       return (
         m[messageKey as keyof typeof m] as (
-          inputs: any,
+          inputs: unknown,
           options: {locale: Locale},
         ) => string
       )({}, {locale: displayLocale});
