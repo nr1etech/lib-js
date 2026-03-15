@@ -24,6 +24,7 @@ export * from './components/refresh-button';
 export * from './components/select-field';
 export * from './components/submit-button';
 export * from './components/text-field';
+export * from './components/textarea-field';
 export * from './components/theme-selector';
 export * from './components/time-zone-selector';
 export * from './components/universal-layout';

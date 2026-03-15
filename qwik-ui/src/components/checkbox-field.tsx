@@ -1,50 +1,26 @@
-import {component$, QRL, Signal, useSignal, useTask$} from '@builder.io/qwik';
+import {component$} from '@builder.io/qwik';
+import type {PropsOf} from '@builder.io/qwik';
 
-export interface CheckboxFieldProps {
-  id?: string;
+export interface CheckboxFieldProps extends PropsOf<'input'> {
   label: string;
-  name?: string;
-  checked?: boolean | Signal<boolean>;
   error?: string;
-  onClick$?: QRL<(event: Event) => void>;
 }
 
 export const CheckboxField = component$((props: CheckboxFieldProps) => {
-  const checked = useSignal<boolean>(
-    typeof props.checked === 'boolean'
-      ? props.checked
-      : (props.checked?.value ?? false),
-  );
-  useTask$(({track}) => {
-    if (props.checked && typeof props.checked !== 'boolean') {
-      track(() => checked.value);
-      if (checked.value !== props.checked?.value) {
-        props.checked.value = checked.value;
-      }
-    }
-  });
-  useTask$(({track}) => {
-    if (props.checked && typeof props.checked !== 'boolean') {
-      track(() => (props.checked as Signal).value);
-      if (props.checked && checked.value !== props.checked.value) {
-        checked.value = props.checked.value;
-      }
-    }
-  });
+  const {label, error, id, class: className, ...inputProps} = props;
+
   return (
     <div class="fieldset">
-      <label class="label" {...(props.id && {for: props.id})}>
+      <label class="label" for={id}>
         <input
           type="checkbox"
-          {...(props.name && {name: props.name})}
-          {...(props.id && {id: props.id})}
-          checked={checked.value}
-          class={`checkbox ${props.error ? 'checkbox-error' : ''}`}
-          onClick$={props.onClick$}
+          id={id}
+          class={`checkbox ${error ? 'checkbox-error' : ''} ${className ?? ''}`}
+          {...inputProps}
         />
-        {props.label}
+        {label}
       </label>
-      {props.error && <div class="text-error mt-1 text-xs">{props.error}</div>}
+      {error && <div class="text-error mt-1 text-xs">{error}</div>}
     </div>
   );
 });

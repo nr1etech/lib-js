@@ -16,6 +16,7 @@ import {
 import {CheckboxField} from '../components/checkbox-field';
 import {Fieldset} from '../components/fieldset';
 import {SelectField} from '../components/select-field';
+import {TextareaField} from '../components/textarea-field';
 import {SubmitButton} from '../components/submit-button';
 import {AddButton} from '../components/add-button';
 import {Button} from '../components/button';
@@ -310,6 +311,27 @@ export default component$(() => {
                 label="Remember me"
                 checked={true}
                 error="You have an error"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full space-y-2">
+          <div class="text-2xl">TextareaField</div>
+          <div class="flex flex-wrap gap-4">
+            <div class="w-sm">
+              <TextareaField
+                label="Enter a description"
+                placeholder="Type something..."
+                rows={4}
+              />
+            </div>
+            <div class="w-sm">
+              <TextareaField
+                label="Enter a description"
+                placeholder="Type something..."
+                rows={4}
+                error="Something bad happened"
               />
             </div>
           </div>
