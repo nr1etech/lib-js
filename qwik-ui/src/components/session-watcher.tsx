@@ -1,10 +1,4 @@
-import {
-  $,
-  component$,
-  QRL,
-  useSignal,
-  useVisibleTask$,
-} from '@builder.io/qwik';
+import {$, component$, QRL, useSignal, useVisibleTask$} from '@builder.io/qwik';
 import {MdiAlertOutline} from '@nr1e/qwik-icons';
 import {Button} from './button';
 import {Dialog} from './dialog';
@@ -63,11 +57,11 @@ export const SessionWatcher = component$((props: SessionWatcherProps) => {
   const handleWarn = $(() => {
     if (!props.dateTime) return;
     const targetTime = new Date(props.dateTime).getTime();
-    const remaining = Math.max(
+
+    countdownSeconds.value = Math.max(
       0,
       Math.floor((targetTime - Date.now()) / 1000),
     );
-    countdownSeconds.value = remaining;
     dialogOpen.value = true;
   });
 
@@ -89,12 +83,11 @@ export const SessionWatcher = component$((props: SessionWatcherProps) => {
         onWarn$={handleWarn}
         onExpired$={handleExpired}
       />
-      <Dialog
-        open={dialogOpen}
-        showCloseIcon={false}
-      >
+      <Dialog open={dialogOpen} showCloseIcon={false}>
         <div q:slot="title" class="flex items-center gap-2 text-lg font-bold">
-          <MdiAlertOutline size={20} />
+          <span class="text-warning">
+            <MdiAlertOutline size={20} />
+          </span>
           Session Expiring Soon
         </div>
         <div class="space-y-2">

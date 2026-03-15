@@ -69,7 +69,7 @@ export const Button = component$((props: ButtonProps) => {
           <props.icon size={iconSize ?? 18} />
         </span>
       ) : (
-        <span class={props.iconClass} q:slot="icon"></span>
+        <Slot name="icon" />
       )}
       {text ? text : <Slot />}
     </button>
