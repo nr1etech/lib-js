@@ -1,5 +1,10 @@
 # @nr1e/qwik-icons
 
+## 0.0.33
+### Patch Changes
+
+- 22820c2: Added SpinnersBarsFade
+
 ## 0.0.32
 ### Patch Changes
 

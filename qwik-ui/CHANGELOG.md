@@ -1,5 +1,12 @@
 # @nr1e/qwik-ui
 
+## 2.0.18
+### Patch Changes
+
+- 6d7562e: Refactored buttons
+- Updated dependencies [22820c2]
+  - @nr1e/qwik-icons@0.0.33
+
 ## 2.0.17
 ### Patch Changes
 
