@@ -1,0 +1,15 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "auto": "Auto (Navigateur)",
+  "af": "afrikaans",
+  "ar": "arabe",
+  "en": "Anglais",
+  "en_GB": "Anglais (Royaume-Uni)",
+  "en_US": "Anglais (États-Unis)",
+  "en_ZA": "Anglais (Afrique du Sud)",
+  "es": "Espagnol",
+  "es_US": "Espagnol (États-Unis)",
+  "fr": "Français",
+  "fr_CA": "Français (Canada)",
+  "fr_FR": "Français (France)"
+}

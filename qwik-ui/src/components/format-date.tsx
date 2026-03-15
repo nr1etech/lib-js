@@ -35,10 +35,17 @@ export const FormatDate = component$((props: FormatDateProps) => {
           timeZone = null;
         }
       }
+      let locale: string | null | undefined = props.locale;
+      if (!props.locale) {
+        locale = localStorage.getItem('locale');
+        if (!locale || locale === 'auto') {
+          locale = undefined;
+        }
+      }
       date.value = formatDate(
         props.date,
         timeZone ?? undefined,
-        props.locale ?? undefined,
+        locale ?? undefined,
       );
     }
   });

@@ -1,5 +1,10 @@
-import {component$, useSignal, useVisibleTask$} from '@builder.io/qwik';
-import {MdiChevronDown} from '@nr1e/qwik-icons';
+import {
+  component$,
+  useSignal,
+  useVisibleTask$,
+  type QRL,
+} from '@builder.io/qwik';
+import {MdiChevronDown, SpinnersBarsRotateFade} from '@nr1e/qwik-icons';
 
 export function timeZoneToName(timezone: string) {
   if (timezone === 'auto') {
@@ -76,10 +81,12 @@ const TIMEZONES = [
 
 export interface TimeZoneSelectorProps {
   timeZones?: string[];
+  onValueChange$?: QRL<(timezone: string) => void>;
 }
 
 export const TimeZoneSelector = component$((props?: TimeZoneSelectorProps) => {
-  const currentTimeZone = useSignal<string>('auto');
+  const currentTimeZone = useSignal<string | undefined>(undefined);
+  const onValueChange = props?.onValueChange$;
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {
@@ -91,7 +98,11 @@ export const TimeZoneSelector = component$((props?: TimeZoneSelectorProps) => {
   return (
     <div class="dropdown">
       <button role="button" tabIndex={0} class="btn m-1">
-        {timeZoneToName(currentTimeZone.value)}
+        {currentTimeZone.value !== undefined ? (
+          timeZoneToName(currentTimeZone.value)
+        ) : (
+          <SpinnersBarsRotateFade size={18} />
+        )}
         <MdiChevronDown size={16} class="fill-current opacity-60" />
       </button>
       <div tabIndex={0} class="dropdown-content card bg-base-100 z-1 shadow-md">
@@ -105,13 +116,18 @@ export const TimeZoneSelector = component$((props?: TimeZoneSelectorProps) => {
                 class="btn btn-sm btn-ghost justify-start"
                 aria-label={timeZoneToName(timezone)}
                 value={timezone}
-                checked={timezone === currentTimeZone.value}
+                checked={timezone === (currentTimeZone.value ?? 'auto')}
                 onChange$={() => {
                   currentTimeZone.value = timezone;
                   if (timezone === 'auto') {
                     localStorage.removeItem('timezone');
                   } else {
                     localStorage.setItem('timezone', timezone);
+                  }
+
+                  // Notify parent component of change
+                  if (onValueChange) {
+                    onValueChange(timezone);
                   }
 
                   // Close the dropdown by removing focus
