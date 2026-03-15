@@ -1,8 +1,7 @@
 import {component$, QRL} from '@builder.io/qwik';
-import {MdiAddCircleOutline} from '@nr1e/qwik-icons';
 import {Button} from './button';
 
-export interface AddButtonProps {
+export interface CancelButtonProps {
   /**
    * ID of the button.
    */
@@ -20,7 +19,7 @@ export interface AddButtonProps {
    */
   disabled?: boolean;
   /**
-   * Text to display on the button. Default is 'Add'.
+   * Text to display on the button. Default is 'Cancel'.
    */
   text?: string;
   /**
@@ -29,13 +28,6 @@ export interface AddButtonProps {
   iconSize?: number;
 }
 
-export const AddButton = component$((props: AddButtonProps) => {
-  return (
-    <Button
-      {...props}
-      class={`btn-primary ${props.class ?? ''}`}
-      icon={MdiAddCircleOutline}
-      text={props.text || 'Add'}
-    ></Button>
-  );
+export const CancelButton = component$((props: CancelButtonProps) => {
+  return <Button {...props} text={props.text || 'Cancel'}></Button>;
 });

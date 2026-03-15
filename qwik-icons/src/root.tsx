@@ -229,6 +229,7 @@ import {
   MdiWarningOutline,
   MdiWrenchOutline,
   Spinners6DotsRotate,
+  SpinnersBarsFade,
   SpinnersBarsRotateFade,
   SpinnersRingResize,
   ClientLoopLogoWhite,
@@ -700,6 +701,7 @@ export default component$(() => {
 
   const spinnerIcons = [
     {component: Spinners6DotsRotate, name: 'Spinners6DotsRotate'},
+    {component: SpinnersBarsFade, name: 'SpinnersBarsFade'},
     {component: SpinnersBarsRotateFade, name: 'SpinnersBarsRotateFade'},
     {component: SpinnersRingResize, name: 'SpinnersRingResize'},
   ];

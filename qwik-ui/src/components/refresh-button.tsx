@@ -1,7 +1,8 @@
-import {component$, QRL, Signal} from '@builder.io/qwik';
+import {component$, QRL, Signal, Slot} from '@builder.io/qwik';
+import {MdiRefresh} from '@nr1e/qwik-icons';
 import {ProcessingButton} from './processing-button';
 
-export interface SubmitButtonProps {
+export interface RefreshButtonProps {
   /**
    * ID of the button.
    */
@@ -23,22 +24,27 @@ export interface SubmitButtonProps {
    */
   type?: 'button' | 'submit' | 'reset';
   /**
-   * Text to display on the button. Default is 'Submit'.
+   * Text to display on the button. Default is 'Refresh'.
    */
   text?: string;
   /**
    * Whether the button is processing.
    */
-  submitting?: boolean | Signal<boolean>;
+  refreshing?: boolean | Signal<boolean>;
+  /**
+   * Size of the icon in pixels if icon is provided in the props. Default is 18.
+   */
+  iconSize?: number;
 }
 
-export const SubmitButton = component$((props: SubmitButtonProps) => {
+export const RefreshButton = component$((props: RefreshButtonProps) => {
   return (
     <ProcessingButton
       {...props}
       class={`btn-primary ${props.class ?? ''}`}
-      text={props.text || 'Submit'}
-      processing={props.submitting}
+      text={props.text || 'Refresh'}
+      icon={MdiRefresh}
+      processing={props.refreshing}
     />
   );
 });

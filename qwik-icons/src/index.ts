@@ -207,6 +207,7 @@ export * from './components/icons/mdi-terminal-line';
 
 // Spinners
 export * from './components/icons/spinners-6-dots-rotate';
+export * from './components/icons/spinners-bars-fade';
 export * from './components/icons/spinners-bars-rotate-fade';
 export * from './components/icons/spinners-ring-resize';
 

@@ -18,6 +18,10 @@ import {Fieldset} from '../components/fieldset';
 import {SelectField} from '../components/select-field';
 import {SubmitButton} from '../components/submit-button';
 import {AddButton} from '../components/add-button';
+import {Button} from '../components/button';
+import {CancelButton} from '../components/cancel-button';
+import {ProcessingButton} from '../components/processing-button';
+import {RefreshButton} from '../components/refresh-button';
 import {
   DropUp,
   DropUpButton,
@@ -44,6 +48,9 @@ export default component$(() => {
   const dialog3Warning = useSignal<string | undefined>(undefined);
   const autoDismissVisible = useSignal<boolean>(true);
   const now = useSignal(new Date().toISOString());
+  const processing = useSignal(false);
+  const refreshing = useSignal(false);
+  const reloading = useSignal(false);
   return (
     <div class="flex flex-col items-center p-4">
       <Nr1eLogoTaglineLightBg height={96} />
@@ -328,8 +335,44 @@ export default component$(() => {
         <div class="w-full space-y-2">
           <div class="text-2xl">Buttons</div>
           <div class="flex flex-wrap gap-4 space-y-2 space-x-2">
+            <Button onClick$={() => alert('Button clicked!')}>
+              Basic button
+            </Button>
+            <Button class="btn-primary">Primary button</Button>
+            <Button icon={MdiAirHorn}>Button with Icon</Button>
+            <Button disabled={true}>Disabled button</Button>
+            <CancelButton onClick$={() => alert('Cancelled!')} />
+            <CancelButton class="btn-error">Cancel (Error)</CancelButton>
+            <ProcessingButton
+              processing={processing}
+              onClick$={() => {
+                processing.value = true;
+                setTimeout(() => {
+                  processing.value = false;
+                }, 2000);
+              }}
+            >
+              Process data
+            </ProcessingButton>
+            <RefreshButton
+              refreshing={refreshing}
+              onClick$={() => {
+                setTimeout(() => {
+                  refreshing.value = false;
+                }, 2000);
+              }}
+            />
+            <RefreshButton
+              refreshing={reloading}
+              text="Reload"
+              onClick$={() => {
+                setTimeout(() => {
+                  reloading.value = false;
+                }, 2000);
+              }}
+            />
             <AddButton>Add something</AddButton>
-            <AddButton class="btn-primary">Add something</AddButton>
+            <AddButton disabled={true}>Add something</AddButton>
             <SubmitButton>Submit</SubmitButton>
             <SubmitButton submitting={true}>Submitting</SubmitButton>
             <SubmitButton disabled={true}>Disabled</SubmitButton>
