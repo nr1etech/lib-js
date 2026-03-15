@@ -1,5 +1,14 @@
 # @nr1e/qwik-ui
 
+## 2.1.4
+### Patch Changes
+
+- a549334: Added SessionWatcher
+- 4cf26c4: Introduced LocaleSelector
+- d558007: Localized selectors
+- b67bd95: Added RadioField
+- c3d023a: Fixed icon display on Button
+
 ## 2.1.3
 ### Patch Changes
 
