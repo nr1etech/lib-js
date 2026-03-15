@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.21
+### Patch Changes
+
+- da22fa3: Refactored processing button to be display only
+
 ## 2.0.20
 ### Patch Changes
 
