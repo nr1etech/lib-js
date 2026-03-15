@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.20
+### Patch Changes
+
+- 412c5bb: Changed behavior of ProcessingButton
+
 ## 2.0.19
 ### Patch Changes
 
