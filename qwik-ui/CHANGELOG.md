@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.1.2
+### Patch Changes
+
+- a348644: Allowed date on FormatDateTime to be undefined
+
 ## 2.1.1
 ### Patch Changes
 
