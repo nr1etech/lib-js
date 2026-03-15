@@ -14,6 +14,7 @@ import {
   Nr1eLogoTaglineLightBg,
 } from '@nr1e/qwik-icons';
 import {CheckboxField} from '../components/checkbox-field';
+import {RadioField} from '../components/radio-field';
 import {Fieldset} from '../components/fieldset';
 import {SelectField} from '../components/select-field';
 import {TextareaField} from '../components/textarea-field';
@@ -309,6 +310,26 @@ export default component$(() => {
               <CheckboxField
                 label="Remember me"
                 checked={true}
+                error="You have an error"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full space-y-2">
+          <div class="text-2xl">RadioField</div>
+          <div class="flex flex-wrap gap-4">
+            <div class="w-sm">
+              <RadioField id="radio1" name="demo" label="Option 1" value="1" />
+              <RadioField id="radio2" name="demo" label="Option 2" value="2" />
+              <RadioField id="radio3" name="demo" label="Option 3" value="3" />
+            </div>
+            <div class="w-sm">
+              <RadioField
+                id="radio4"
+                name="demo-error"
+                label="Option with error"
+                value="1"
                 error="You have an error"
               />
             </div>
