@@ -39,10 +39,17 @@ export const FormatDateTime = component$((props: FormatDateTimeProps) => {
           timeZone = null;
         }
       }
+      let locale: string | null | undefined = props.locale;
+      if (!props.locale) {
+        locale = localStorage.getItem('locale');
+        if (!locale || locale === 'auto') {
+          locale = undefined;
+        }
+      }
       date.value = formatDateTime(
         props.date,
         timeZone ?? undefined,
-        props.locale ?? undefined,
+        locale ?? undefined,
       );
     }
   });

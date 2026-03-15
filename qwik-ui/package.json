@@ -47,7 +47,8 @@
     "release": "np",
     "start": "vite --open --mode ssr",
     "test": "vitest run src",
-    "qwik": "qwik"
+    "qwik": "qwik",
+    "machine-translate": "pnpx @inlang/cli machine translate --project project.inlang"
   },
   "peerDependencies": {
     "@builder.io/qwik-city": "catalog:",
@@ -72,6 +73,8 @@
     "undici": "catalog:",
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "@inlang/paraglide-js": "catalog:",
+    "@inlang/cli": "catalog:"
   }
 }

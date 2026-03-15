@@ -1,5 +1,10 @@
-import {component$, useSignal, useVisibleTask$} from '@builder.io/qwik';
-import {MdiChevronDown} from '@nr1e/qwik-icons';
+import {
+  component$,
+  useSignal,
+  useVisibleTask$,
+  type QRL,
+} from '@builder.io/qwik';
+import {MdiChevronDown, SpinnersBarsRotateFade} from '@nr1e/qwik-icons';
 
 function capitalizeFirstLetter(input: string): string {
   return input.charAt(0).toUpperCase() + input.slice(1);
@@ -56,13 +61,18 @@ export interface ThemeSelectorProps {
    * List of themes to show in the dropdown. Default is all themes.
    */
   themes?: string[];
+  /**
+   * Callback function that is called when the theme changes.
+   */
+  onValueChange$?: QRL<(theme: string) => void>;
 }
 
 /**
  * ThemeSelector drop down component. This will save theme selection to localStorage under 'theme'.
  */
 export const ThemeSelector = component$((props?: ThemeSelectorProps) => {
-  const currentTheme = useSignal<string>('auto');
+  const currentTheme = useSignal<string | undefined>(undefined);
+  const onValueChange = props?.onValueChange$;
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {
@@ -74,7 +84,11 @@ export const ThemeSelector = component$((props?: ThemeSelectorProps) => {
   return (
     <div class="dropdown">
       <button role="button" tabIndex={0} class="btn m-1">
-        {themeToName(currentTheme.value)}
+        {currentTheme.value !== undefined ? (
+          themeToName(currentTheme.value)
+        ) : (
+          <SpinnersBarsRotateFade size={18} />
+        )}
         <MdiChevronDown size={16} class="fill-current opacity-60" />
       </button>
       <div tabIndex={0} class="dropdown-content card bg-base-100 z-1 shadow-md">
@@ -88,7 +102,7 @@ export const ThemeSelector = component$((props?: ThemeSelectorProps) => {
                 class="theme-controller btn btn-sm btn-ghost justify-start"
                 aria-label={themeToName(theme)}
                 value={theme}
-                checked={theme === currentTheme.value}
+                checked={theme === (currentTheme.value ?? 'auto')}
                 onChange$={() => {
                   currentTheme.value = theme;
                   if (theme === 'auto') {
@@ -96,6 +110,11 @@ export const ThemeSelector = component$((props?: ThemeSelectorProps) => {
                     localStorage.removeItem('theme');
                   } else {
                     localStorage.setItem('theme', theme);
+                  }
+
+                  // Notify parent component of change
+                  if (onValueChange) {
+                    onValueChange(theme);
                   }
 
                   // Close the dropdown by removing focus
