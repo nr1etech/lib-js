@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.0.16
+### Patch Changes
+
+- e371826: Adjusting SubmitButton
+
 ## 2.0.15
 ### Patch Changes
 
