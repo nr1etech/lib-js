@@ -42,6 +42,7 @@ import {
 import {LocaleSelector, localeToName} from '../components/locale-selector';
 import {FormatDate} from '../components/format-date';
 import {FormatDateTime} from '../components/format-date-time';
+import {SessionWatcher} from '../components/session-watcher';
 
 export default component$(() => {
   const openDialog1 = useSignal(false);
@@ -53,6 +54,9 @@ export default component$(() => {
   const dialog3Warning = useSignal<string | undefined>(undefined);
   const autoDismissVisible = useSignal<boolean>(true);
   const now = useSignal(new Date().toISOString());
+  const sessionExpiry = useSignal<string | null>(
+    new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+  );
   const processing = useSignal(false);
   const refreshing = useSignal(false);
   const reloading = useSignal(false);
@@ -436,7 +440,60 @@ export default component$(() => {
         </div>
 
         <div class="w-full space-y-2">
-          <div class="text-2xl">Buttons</div>
+          <div class="text-2xl">SessionWatcher</div>
+          <p class="text-sm opacity-70">
+            Session expires at:{' '}
+            {sessionExpiry.value
+              ? new Date(sessionExpiry.value).toLocaleTimeString()
+              : 'not set'}
+          </p>
+          <div class="flex gap-4">
+            <button
+              class="btn"
+              onClick$={() => {
+                sessionExpiry.value = new Date(
+                  Date.now() + 10 * 60 * 1000,
+                ).toISOString();
+              }}
+            >
+              Reset session (10 min)
+            </button>
+            <button
+              class="btn btn-warning"
+              onClick$={() => {
+                sessionExpiry.value = new Date(
+                  Date.now() + 2 * 60 * 1000,
+                ).toISOString();
+              }}
+            >
+              Trigger warn in ~1 min (2 min expiry, 1 min warn)
+            </button>
+            <button
+              class="btn btn-error"
+              onClick$={() => {
+                sessionExpiry.value = null;
+              }}
+            >
+              Clear session
+            </button>
+          </div>
+          <SessionWatcher
+            dateTime={sessionExpiry.value}
+            warnMinutes={1}
+            onExtendSelected$={() => {
+              sessionExpiry.value = new Date(
+                Date.now() + 10 * 60 * 1000,
+              ).toISOString();
+              console.log('Session extended!');
+            }}
+            onExpired$={() => {
+              sessionExpiry.value = null;
+              console.log('Session expired!');
+            }}
+          />
+        </div>
+
+        <div class="w-full space-y-2">
           <div class="flex flex-wrap gap-4 space-y-2 space-x-2">
             <Button onClick$={() => alert('Button clicked!')}>
               Basic button
