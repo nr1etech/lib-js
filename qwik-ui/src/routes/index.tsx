@@ -14,6 +14,7 @@ import {
   Nr1eLogoTaglineLightBg,
 } from '@nr1e/qwik-icons';
 import {CheckboxField} from '../components/checkbox-field';
+import {RadioField} from '../components/radio-field';
 import {Fieldset} from '../components/fieldset';
 import {SelectField} from '../components/select-field';
 import {TextareaField} from '../components/textarea-field';
@@ -41,6 +42,7 @@ import {
 import {LocaleSelector, localeToName} from '../components/locale-selector';
 import {FormatDate} from '../components/format-date';
 import {FormatDateTime} from '../components/format-date-time';
+import {SessionWatcher} from '../components/session-watcher';
 
 export default component$(() => {
   const openDialog1 = useSignal(false);
@@ -52,6 +54,9 @@ export default component$(() => {
   const dialog3Warning = useSignal<string | undefined>(undefined);
   const autoDismissVisible = useSignal<boolean>(true);
   const now = useSignal(new Date().toISOString());
+  const sessionExpiry = useSignal<string | null>(
+    new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+  );
   const processing = useSignal(false);
   const refreshing = useSignal(false);
   const reloading = useSignal(false);
@@ -90,7 +95,7 @@ export default component$(() => {
           <button class="btn btn-primary">View Menu Demo</button>
         </a>
       </div>
-      <div class="flex w-full max-w-4xl flex-col space-y-6 pb-[200px]">
+      <div class="flex w-full max-w-4xl flex-col space-y-6 pb-50">
         <div class="w-full space-y-2">
           <div class="text-2xl">Selectors</div>
           <div class="flex flex-wrap gap-4">
@@ -128,7 +133,10 @@ export default component$(() => {
               />
               <div class="px-2 text-sm opacity-70">
                 Selected:{' '}
-                {localeToName(selectedLocale.value, displayLocale.value as any)}
+                {localeToName(
+                  selectedLocale.value,
+                  displayLocale.value as never,
+                )}
               </div>
             </div>
           </div>
@@ -377,6 +385,26 @@ export default component$(() => {
         </div>
 
         <div class="w-full space-y-2">
+          <div class="text-2xl">RadioField</div>
+          <div class="flex flex-wrap gap-4">
+            <div class="w-sm">
+              <RadioField id="radio1" name="demo" label="Option 1" value="1" />
+              <RadioField id="radio2" name="demo" label="Option 2" value="2" />
+              <RadioField id="radio3" name="demo" label="Option 3" value="3" />
+            </div>
+            <div class="w-sm">
+              <RadioField
+                id="radio4"
+                name="demo-error"
+                label="Option with error"
+                value="1"
+                error="You have an error"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full space-y-2">
           <div class="text-2xl">TextareaField</div>
           <div class="flex flex-wrap gap-4">
             <div class="w-sm">
@@ -415,7 +443,60 @@ export default component$(() => {
         </div>
 
         <div class="w-full space-y-2">
-          <div class="text-2xl">Buttons</div>
+          <div class="text-2xl">SessionWatcher</div>
+          <p class="text-sm opacity-70">
+            Session expires at:{' '}
+            {sessionExpiry.value
+              ? new Date(sessionExpiry.value).toLocaleTimeString()
+              : 'not set'}
+          </p>
+          <div class="flex gap-4">
+            <button
+              class="btn"
+              onClick$={() => {
+                sessionExpiry.value = new Date(
+                  Date.now() + 10 * 60 * 1000,
+                ).toISOString();
+              }}
+            >
+              Reset session (10 min)
+            </button>
+            <button
+              class="btn btn-warning"
+              onClick$={() => {
+                sessionExpiry.value = new Date(
+                  Date.now() + 2 * 60 * 1000,
+                ).toISOString();
+              }}
+            >
+              Trigger warn in ~1 min (2 min expiry, 1 min warn)
+            </button>
+            <button
+              class="btn btn-error"
+              onClick$={() => {
+                sessionExpiry.value = null;
+              }}
+            >
+              Clear session
+            </button>
+          </div>
+          <SessionWatcher
+            dateTime={sessionExpiry.value}
+            warnMinutes={1}
+            onExtendSelected$={() => {
+              sessionExpiry.value = new Date(
+                Date.now() + 10 * 60 * 1000,
+              ).toISOString();
+              console.log('Session extended!');
+            }}
+            onExpired$={() => {
+              sessionExpiry.value = null;
+              console.log('Session expired!');
+            }}
+          />
+        </div>
+
+        <div class="w-full space-y-2">
           <div class="flex flex-wrap gap-4 space-y-2 space-x-2">
             <Button onClick$={() => alert('Button clicked!')}>
               Basic button

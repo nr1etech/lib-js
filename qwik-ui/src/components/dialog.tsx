@@ -87,6 +87,7 @@ export const Dialog = component$((props: DialogProps) => {
             <MdiClose size={24} />
           </button>
         )}
+        <Slot name="title" />
         {props.title && <div class="text-lg font-bold">{props.title}</div>}
         <div class="py-4">
           {props.loading && props.loading.value && (
