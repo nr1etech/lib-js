@@ -46,7 +46,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.MATRIX }}
     steps:
-      - uses: actions/create-github-app-token@v2.2.2
+      - uses: actions/create-github-app-token@v3.0.0
         id: app-token
         with:
           app-id: ${{ secrets.app-id }}
@@ -82,7 +82,7 @@ jobs:
     name: Add issue to project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2.2.2
+      - uses: actions/create-github-app-token@v3.0.0
         id: app-token
         with:
           app-id: ${{ secrets.app-id }}
