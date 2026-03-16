@@ -37,24 +37,24 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.mts"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./bcl": {
-      "import": "./dist/bcl/index.mjs",
-      "types": "./dist/bcl/index.d.mts"
+      "import": "./dist/bcl/index.js",
+      "types": "./dist/bcl/index.d.ts"
     },
     "./checkout": {
-      "import": "./dist/checkout/index.mjs",
-      "types": "./dist/checkout/index.d.mts"
+      "import": "./dist/checkout/index.js",
+      "types": "./dist/checkout/index.d.ts"
     },
     "./lem": {
-      "import": "./dist/lem/index.mjs",
-      "types": "./dist/lem/index.d.mts"
+      "import": "./dist/lem/index.js",
+      "types": "./dist/lem/index.d.ts"
     },
     "./management": {
-      "import": "./dist/management/index.mjs",
-      "types": "./dist/management/index.d.mts"
+      "import": "./dist/management/index.js",
+      "types": "./dist/management/index.d.ts"
     }
   }
 }
