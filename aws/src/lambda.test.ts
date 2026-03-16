@@ -1,5 +1,5 @@
 import {test} from 'vitest';
-import {getCodeSizeBytes} from './lambda.mjs';
+import {getCodeSizeBytes} from './lambda.js';
 
 test('Test getCodeSizeBytes @none', async () => {
   const bytes = await getCodeSizeBytes(

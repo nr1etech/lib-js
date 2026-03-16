@@ -4,7 +4,7 @@ import {
   GetCallerIdentityCommandOutput,
   STSClient,
 } from '@aws-sdk/client-sts';
-import {getAwsRegion} from './region.mjs';
+import {getAwsRegion} from './region.js';
 
 export {
   STSClient,

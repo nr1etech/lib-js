@@ -12,7 +12,7 @@ import {
   Message,
   SystemContentBlock,
 } from '@aws-sdk/client-bedrock-runtime';
-import {getAwsRegion} from './region.mjs';
+import {getAwsRegion} from './region.js';
 
 export {
   BedrockRuntimeClient,

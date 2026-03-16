@@ -20,7 +20,7 @@ import {
   UpdateCommandInput,
   UpdateCommandOutput,
 } from '@aws-sdk/lib-dynamodb';
-import {getAwsRegion} from './region.mjs';
+import {getAwsRegion} from './region.js';
 
 /**
  * Re-exporting commands to be helpful so clients may not have to import the AWS SDK directly.

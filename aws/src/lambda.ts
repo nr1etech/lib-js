@@ -5,7 +5,7 @@ import {
   GetFunctionCommandOutput,
   ResourceNotFoundException,
 } from '@aws-sdk/client-lambda';
-import {getAwsRegion} from './region.mjs';
+import {getAwsRegion} from './region.js';
 
 export {GetFunctionCommand, GetFunctionCommandInput, GetFunctionCommandOutput};
 

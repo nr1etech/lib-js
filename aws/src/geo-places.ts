@@ -14,7 +14,7 @@ import {
   SuggestCommandInput,
   SuggestCommandOutput,
 } from '@aws-sdk/client-geo-places';
-import {getAwsRegion} from './region.mjs';
+import {getAwsRegion} from './region.js';
 
 export {
   AutocompleteCommand,
