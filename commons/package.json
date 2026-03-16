@@ -41,44 +41,44 @@
   },
   "exports": {
     "./bitsnbytes": {
-      "import": "./dist/bitsnbytes/index.mjs",
-      "types": "./dist/bitsnbytes/index.d.mts"
+      "import": "./dist/bitsnbytes/index.js",
+      "types": "./dist/bitsnbytes/index.d.ts"
     },
     "./business": {
-      "import": "./dist/business/index.mjs",
-      "types": "./dist/business/index.d.mts"
+      "import": "./dist/business/index.js",
+      "types": "./dist/business/index.d.ts"
     },
     "./encryption": {
-      "import": "./dist/encryption/index.mjs",
-      "types": "./dist/encryption/index.d.mts"
+      "import": "./dist/encryption/index.js",
+      "types": "./dist/encryption/index.d.ts"
     },
     "./errors": {
-      "import": "./dist/errors/index.mjs",
-      "types": "./dist/errors/index.d.mts"
+      "import": "./dist/errors/index.js",
+      "types": "./dist/errors/index.d.ts"
     },
     "./http": {
-      "import": "./dist/http/index.mjs",
-      "types": "./dist/http/index.d.mts"
+      "import": "./dist/http/index.js",
+      "types": "./dist/http/index.d.ts"
     },
     "./ids": {
-      "import": "./dist/ids/index.mjs",
-      "types": "./dist/ids/index.d.mts"
+      "import": "./dist/ids/index.js",
+      "types": "./dist/ids/index.d.ts"
     },
     "./lang": {
-      "import": "./dist/lang/index.mjs",
-      "types": "./dist/lang/index.d.mts"
+      "import": "./dist/lang/index.js",
+      "types": "./dist/lang/index.d.ts"
     },
     "./oauth": {
-      "import": "./dist/oauth/index.mjs",
-      "types": "./dist/oauth/index.d.mts"
+      "import": "./dist/oauth/index.js",
+      "types": "./dist/oauth/index.d.ts"
     },
     "./os": {
-      "import": "./dist/os/index.mjs",
-      "types": "./dist/os/index.d.mts"
+      "import": "./dist/os/index.js",
+      "types": "./dist/os/index.d.ts"
     },
     "./validator": {
-      "import": "./dist/validator/index.mjs",
-      "types": "./dist/validator/index.d.mts"
+      "import": "./dist/validator/index.js",
+      "types": "./dist/validator/index.d.ts"
     }
   }
 }
