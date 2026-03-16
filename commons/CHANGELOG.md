@@ -1,5 +1,10 @@
 # @nr1e/commons
 
+## 0.4.8
+### Patch Changes
+
+- 4bac01b: Added valibot module
+
 ## 0.4.7
 ### Patch Changes
 
