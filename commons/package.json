@@ -34,8 +34,8 @@
     "typescript-eslint": "catalog:",
     "valibot": "catalog:",
     "vitest": "catalog:",
-    "@inlang/paraglide-js": "^2.15.0",
-    "@inlang/cli": "^3.0.0"
+    "@inlang/paraglide-js": "catalog:",
+    "@inlang/cli": "catalog:"
   },
   "dependencies": {
     "ksuid": "catalog:",

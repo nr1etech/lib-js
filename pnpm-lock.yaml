@@ -284,6 +284,12 @@ importers:
       '@eslint/js':
         specifier: 'catalog:'
         version: 9.39.4
+      '@inlang/cli':
+        specifier: 'catalog:'
+        version: 3.1.7
+      '@inlang/paraglide-js':
+        specifier: 'catalog:'
+        version: 2.15.0
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.13
