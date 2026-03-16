@@ -1,5 +1,10 @@
 # @nr1e/commons
 
+## 0.4.9
+### Patch Changes
+
+- 67d7616: Added localization and corrected schemas
+
 ## 0.4.8
 ### Patch Changes
 
