@@ -17,11 +17,12 @@
   ],
   "scripts": {
     "prebuild": "prettier --check . && eslint .",
-    "build": "tsc",
+    "build": "pnpx @inlang/paraglide-js compile --project ./project.inlang --outdir ./src/paraglide && tsc",
     "watch": "tsc -w",
     "test": "vitest run src",
     "clean": "rm -rf dist",
-    "fmt": "prettier --write ."
+    "fmt": "prettier --write .",
+    "machine-translate": "npx @inlang/cli machine translate --project project.inlang"
   },
   "devDependencies": {
     "@eslint/js": "catalog:",
@@ -32,7 +33,9 @@
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
     "valibot": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "@inlang/paraglide-js": "^2.15.0",
+    "@inlang/cli": "^3.0.0"
   },
   "dependencies": {
     "ksuid": "catalog:",

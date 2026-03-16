@@ -3,3 +3,6 @@ coverage
 dist
 site
 CHANGELOG.md
+project.inlang/*
+!project.inlang/settings.json
+src/paraglide

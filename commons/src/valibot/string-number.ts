@@ -1,13 +1,17 @@
 import * as v from 'valibot';
+import {m} from '../paraglide/messages.js';
+import {Locale} from './locale.js';
 
 /**
  * Accepts a number or a string and converts strings to a number.
+ *
+ * @param locale - The optional locale to use for error messages.
  */
-export function stringNumber() {
+export function stringNumber(locale?: Locale) {
   return v.pipe(
     v.union([v.string(), v.number()]),
     v.transform((value) => (typeof value === 'string' ? Number(value) : value)),
-    v.number(),
+    v.number(m.v_NaN({}, {locale})),
   );
 }
 
@@ -15,13 +19,15 @@ export function stringNumber() {
  * Accepts a number or a string, converts strings to a number, and returns null if the string is empty.
  *
  * @param min - The minimum value.
+ * @param locale - The optional locale to use for error messages.
  */
-export function stringNumberMinimum(min: number | string) {
+export function stringNumberMinimum(min: number | string, locale?: Locale) {
   if (typeof min === 'string') min = Number(min);
   return v.pipe(
     v.union([v.string(), v.number()]),
     v.transform((value) => (typeof value === 'string' ? Number(value) : value)),
-    v.minValue(min, `Must be at least ${min}`),
+    v.number(m.v_NaN({}, {locale})),
+    v.minValue(min, m.v_atLeast({min}, {locale})),
   );
 }
 
@@ -29,13 +35,15 @@ export function stringNumberMinimum(min: number | string) {
  * Accepts a number or a string, converts the strings to a number, and returns null if the string is empty.
  *
  * @param max - The maximum value.
+ * @param locale - The optional locale to use for error messages.
  */
-export function stringNumberMaximum(max: number | string) {
+export function stringNumberMaximum(max: number | string, locale?: Locale) {
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
     v.union([v.string(), v.number()]),
     v.transform((value) => (typeof value === 'string' ? Number(value) : value)),
-    v.maxValue(max, `May be at most ${max}`),
+    v.number(m.v_NaN({}, {locale})),
+    v.maxValue(max, m.v_atMost({max}, {locale})),
   );
 }
 
@@ -44,29 +52,37 @@ export function stringNumberMaximum(max: number | string) {
  *
  * @param min - The minimum value.
  * @param max - The maximum value.
+ * @param locale - The optional locale to use for error messages.
  */
-export function stringNumberRange(min: number | string, max: number | string) {
+export function stringNumberRange(
+  min: number | string,
+  max: number | string,
+  locale?: Locale,
+) {
   if (typeof min === 'string') min = Number(min);
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
     v.union([v.string(), v.number()]),
     v.transform((value) => (typeof value === 'string' ? Number(value) : value)),
-    v.minValue(min, `Must be at least ${min}`),
-    v.maxValue(max, `May be at most ${max}`),
+    v.number(m.v_NaN({}, {locale})),
+    v.minValue(min, m.v_atLeast({min}, {locale})),
+    v.maxValue(max, m.v_atMost({max}, {locale})),
   );
 }
 
 /**
  * Accepts a number or a string and trims strings and converts strings to a number.
+ *
+ * @param locale - The optional locale to use for error messages.
  */
-export function trimStringNumber() {
+export function trimStringNumber(locale?: Locale) {
   return v.pipe(
     v.union([v.string(), v.number()]),
     v.transform((value) => {
       if (typeof value === 'string') return Number(value.trim());
       return value;
     }),
-    v.number(),
+    v.number(m.v_NaN({}, {locale})),
   );
 }
 
@@ -74,8 +90,9 @@ export function trimStringNumber() {
  * Accepts a number or a string and trims strings and converts strings to a number and returns null if the string is empty.
  *
  * @param min - The minimum value.
+ * @param locale - The optional locale to use for error messages.
  */
-export function trimStringNumberMinimum(min: number | string) {
+export function trimStringNumberMinimum(min: number | string, locale?: Locale) {
   if (typeof min === 'string') min = Number(min);
   return v.pipe(
     v.union([v.string(), v.number()]),
@@ -83,8 +100,8 @@ export function trimStringNumberMinimum(min: number | string) {
       if (typeof value === 'string') return Number(value.trim());
       return value;
     }),
-    v.minValue(min, `Must be at least ${min}`),
-    v.number(),
+    v.number(m.v_NaN({}, {locale})),
+    v.minValue(min, m.v_atLeast({min}, {locale})),
   );
 }
 
@@ -92,8 +109,9 @@ export function trimStringNumberMinimum(min: number | string) {
  * Accepts a number or a string and trims strings and converts strings to a number and returns null if the string is empty.
  *
  * @param max - The maximum value.
+ * @param locale - The optional locale to use for error messages.
  */
-export function trimStringNumberMaximum(max: number | string) {
+export function trimStringNumberMaximum(max: number | string, locale?: Locale) {
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
     v.union([v.string(), v.number()]),
@@ -101,8 +119,8 @@ export function trimStringNumberMaximum(max: number | string) {
       if (typeof value === 'string') return Number(value.trim());
       return value;
     }),
-    v.maxValue(max, `May be at most ${max}`),
-    v.number(),
+    v.number(m.v_NaN({}, {locale})),
+    v.maxValue(max, m.v_atMost({max}, {locale})),
   );
 }
 
@@ -111,10 +129,12 @@ export function trimStringNumberMaximum(max: number | string) {
  *
  * @param min - The minimum value.
  * @param max - The maximum value.
+ * @param locale - The optional locale to use for error messages.
  */
 export function trimStringNumberRange(
   min: number | string,
   max: number | string,
+  locale?: Locale,
 ) {
   if (typeof min === 'string') min = Number(min);
   if (typeof max === 'string') max = Number(max);
@@ -124,23 +144,25 @@ export function trimStringNumberRange(
       if (typeof value === 'string') return Number(value.trim());
       return value;
     }),
-    v.minValue(min, `Must be at least ${min}`),
-    v.maxValue(max, `May be at most ${max}`),
-    v.number(),
+    v.number(m.v_NaN({}, {locale})),
+    v.minValue(min, m.v_atLeast({min}, {locale})),
+    v.maxValue(max, m.v_atMost({max}, {locale})),
   );
 }
 
 /**
  * Accepts a number or a string, trims strings, converts strings to a number, and returns null if the string is empty.
+ *
+ * @param locale - The optional locale to use for error messages.
  */
-export function stringNumberEmptyNull() {
+export function stringNumberEmptyNull(locale?: Locale) {
   return v.pipe(
     v.union([v.string(), v.number()]),
     v.transform((value) => {
       if (value === '') return null;
       return typeof value === 'string' ? Number(value) : value;
     }),
-    v.nullable(v.number()),
+    v.nullable(v.number(m.v_NaN({}, {locale}))),
   );
 }
 
@@ -148,8 +170,12 @@ export function stringNumberEmptyNull() {
  * Accepts a number or a string, trims strings, converts strings to a number, and returns null if the string is empty.
  *
  * @param min - The minimum value.
+ * @param locale - The optional locale to use for error messages.
  */
-export function stringNumberMinimumEmptyNull(min: number | string) {
+export function stringNumberMinimumEmptyNull(
+  min: number | string,
+  locale?: Locale,
+) {
   if (typeof min === 'string') min = Number(min);
   return v.pipe(
     v.union([v.string(), v.number()]),
@@ -157,7 +183,12 @@ export function stringNumberMinimumEmptyNull(min: number | string) {
       if (value === '') return null;
       return typeof value === 'string' ? Number(value) : value;
     }),
-    v.nullable(v.pipe(v.number(), v.minValue(min, `Must be at leat ${min}`))),
+    v.nullable(
+      v.pipe(
+        v.number(m.v_NaN({}, {locale})),
+        v.minValue(min, m.v_atLeast({min}, {locale})),
+      ),
+    ),
   );
 }
 
@@ -165,8 +196,12 @@ export function stringNumberMinimumEmptyNull(min: number | string) {
  * Accepts a number or a string, trims strings, converts strings to a number, and returns null if the string is empty.
  *
  * @param max - The maximum value.
+ * @param locale - The optional locale to use for error messages.
  */
-export function stringNumberMaximumEmptyNull(max: number | string) {
+export function stringNumberMaximumEmptyNull(
+  max: number | string,
+  locale?: Locale,
+) {
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
     v.union([v.string(), v.number()]),
@@ -174,7 +209,12 @@ export function stringNumberMaximumEmptyNull(max: number | string) {
       if (value === '') return null;
       return typeof value === 'string' ? Number(value) : value;
     }),
-    v.nullable(v.pipe(v.number(), v.maxValue(max, `Must be at most ${max}`))),
+    v.nullable(
+      v.pipe(
+        v.number(m.v_NaN({}, {locale})),
+        v.maxValue(max, m.v_atMost({max}, {locale})),
+      ),
+    ),
   );
 }
 
@@ -183,10 +223,12 @@ export function stringNumberMaximumEmptyNull(max: number | string) {
  *
  * @param min - The minimum value.
  * @param max - The maximum value.
+ * @param locale - The optional locale to use for error messages.
  */
 export function stringNumberRangeEmptyNull(
   min: number | string,
   max: number | string,
+  locale?: Locale,
 ) {
   if (typeof min === 'string') min = Number(min);
   if (typeof max === 'string') max = Number(max);
@@ -198,9 +240,9 @@ export function stringNumberRangeEmptyNull(
     }),
     v.nullable(
       v.pipe(
-        v.number(),
-        v.minValue(min, `Must be at leat ${min}`),
-        v.maxValue(max, `May be at most ${max}`),
+        v.number(m.v_NaN({}, {locale})),
+        v.minValue(min, m.v_atLeast({min}, {locale})),
+        v.maxValue(max, m.v_atMost({max}, {locale})),
       ),
     ),
   );
@@ -208,8 +250,10 @@ export function stringNumberRangeEmptyNull(
 
 /**
  * Accepts a number or a string, trims strings, converts the string to a number, and returns null if the string is empty.
+ *
+ * @param locale - The optional locale to use for error messages.
  */
-export function trimStringNumberEmptyNull() {
+export function trimStringNumberEmptyNull(locale?: Locale) {
   return v.pipe(
     v.union([v.string(), v.number()]),
     v.transform((value) => {
@@ -217,7 +261,7 @@ export function trimStringNumberEmptyNull() {
       if (typeof value === 'string') return Number(value.trim());
       return value;
     }),
-    v.nullable(v.number()),
+    v.nullable(v.number(m.v_NaN({}, {locale}))),
   );
 }
 
@@ -225,8 +269,12 @@ export function trimStringNumberEmptyNull() {
  * Accepts a number or a string, trims strings, converts the string to a number, and returns null if the string is empty.
  *
  * @param min - The minimum value.
+ * @param locale - The optional locale to use for error messages.
  */
-export function trimStringNumberMinimumEmptyNull(min: number | string) {
+export function trimStringNumberMinimumEmptyNull(
+  min: number | string,
+  locale?: Locale,
+) {
   if (typeof min === 'string') min = Number(min);
   return v.pipe(
     v.union([v.string(), v.number()]),
@@ -235,7 +283,12 @@ export function trimStringNumberMinimumEmptyNull(min: number | string) {
       if (typeof value === 'string') return Number(value.trim());
       return value;
     }),
-    v.nullable(v.pipe(v.number(), v.minValue(min, `Must be at leat ${min}`))),
+    v.nullable(
+      v.pipe(
+        v.number(m.v_NaN({}, {locale})),
+        v.minValue(min, m.v_atLeast({min}, {locale})),
+      ),
+    ),
   );
 }
 
@@ -243,8 +296,12 @@ export function trimStringNumberMinimumEmptyNull(min: number | string) {
  * Accepts a number or a string, trims strings, converts the string to a number, and returns null if the string is empty.
  *
  * @param max - The maximum value.
+ * @param locale - The optional locale to use for error messages.
  */
-export function trimStringNumberMaximumEmptyNull(max: number | string) {
+export function trimStringNumberMaximumEmptyNull(
+  max: number | string,
+  locale?: Locale,
+) {
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
     v.union([v.string(), v.number()]),
@@ -253,7 +310,12 @@ export function trimStringNumberMaximumEmptyNull(max: number | string) {
       if (typeof value === 'string') return Number(value.trim());
       return value;
     }),
-    v.nullable(v.pipe(v.number(), v.maxValue(max, `May be at most ${max}`))),
+    v.nullable(
+      v.pipe(
+        v.number(m.v_NaN({}, {locale})),
+        v.maxValue(max, m.v_atMost({max}, {locale})),
+      ),
+    ),
   );
 }
 
@@ -262,10 +324,12 @@ export function trimStringNumberMaximumEmptyNull(max: number | string) {
  *
  * @param min - The minimum value.
  * @param max - The maximum value.
+ * @param locale - The optional locale to use for error messages.
  */
 export function trimStringNumberRangeEmptyNull(
   min: number | string,
   max: number | string,
+  locale?: Locale,
 ) {
   if (typeof min === 'string') min = Number(min);
   if (typeof max === 'string') max = Number(max);
@@ -278,9 +342,9 @@ export function trimStringNumberRangeEmptyNull(
     }),
     v.nullable(
       v.pipe(
-        v.number(),
-        v.minValue(min, `Must be at leat ${min}`),
-        v.maxValue(max, `May be at most ${max}`),
+        v.number(m.v_NaN({}, {locale})),
+        v.minValue(min, m.v_atLeast({min}, {locale})),
+        v.maxValue(max, m.v_atMost({max}, {locale})),
       ),
     ),
   );

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "v_NaN": "يجب أن يكون رقمًا",
+  "v_atLeast": "يجب أن يكون على الأقل {min}",
+  "v_atMost": "يجب ألا يتجاوز {max}"
+}
