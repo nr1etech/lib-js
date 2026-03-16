@@ -76,6 +76,10 @@
       "import": "./dist/os/index.js",
       "types": "./dist/os/index.d.ts"
     },
+    "./valibot": {
+      "import": "./dist/valibot/index.js",
+      "types": "./dist/valibot/index.d.ts"
+    },
     "./validator": {
       "import": "./dist/validator/index.js",
       "types": "./dist/validator/index.d.ts"
