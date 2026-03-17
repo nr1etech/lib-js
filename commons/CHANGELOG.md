@@ -1,5 +1,10 @@
 # @nr1e/commons
 
+## 0.4.12
+### Patch Changes
+
+- f44b178: Fixed issue with Locale type export
+
 ## 0.4.11
 ### Patch Changes
 
