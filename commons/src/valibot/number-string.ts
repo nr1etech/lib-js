@@ -27,10 +27,13 @@ export function numberStringEmptyNull(locale?: Locale) {
       }
       return value;
     }),
-    v.union([
-      v.null(),
-      v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
-    ]),
+    v.union(
+      [
+        v.null(),
+        v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
+      ],
+      m.v_NaN({}, {locale}),
+    ),
   );
 }
 
@@ -73,22 +76,25 @@ export function numberStringFixedEmptyNull(
       if (trimmed === '') return null;
       return Number(trimmed);
     }),
-    v.union([
-      v.null(),
-      v.pipe(
-        v.number(m.v_NaN({}, {locale})),
-        v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
-        v.check(
-          (value) => {
-            const shifted = value * 10 ** fractionDigits;
-            return Math.abs(shifted - Math.trunc(shifted)) < Number.EPSILON;
-          },
-          m.v_overPrecision({fractionDigits}, {locale}),
+    v.union(
+      [
+        v.null(),
+        v.pipe(
+          v.number(),
+          v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
+          v.check(
+            (value) => {
+              const shifted = value * 10 ** fractionDigits;
+              return Math.abs(shifted - Math.trunc(shifted)) < Number.EPSILON;
+            },
+            m.v_overPrecision({fractionDigits}, {locale}),
+          ),
+          v.transform((value) => value.toFixed(fractionDigits)),
+          v.string(),
         ),
-        v.transform((value) => value.toFixed(fractionDigits)),
-        v.string(),
-      ),
-    ]),
+      ],
+      m.v_NaN({}, {locale}),
+    ),
   );
 }
 
@@ -174,15 +180,19 @@ export function numberStringEmptyNullMinimum(
       }
       return value;
     }),
-    v.union([
-      v.null(),
-      v.pipe(
-        v.number(m.v_NaN({}, {locale})),
-        v.minValue(min, m.v_atLeast({min}, {locale})),
-        v.transform((value) => value.toString()),
-        v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
-      ),
-    ]),
+    v.union(
+      [
+        v.null(),
+        v.pipe(
+          v.number(),
+          v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
+          v.minValue(min, m.v_atLeast({min}, {locale})),
+          v.transform((value) => value.toString()),
+          v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
+        ),
+      ],
+      m.v_NaN({}, {locale}),
+    ),
   );
 }
 
@@ -202,15 +212,19 @@ export function numberStringEmptyNullMaximum(
       }
       return value;
     }),
-    v.union([
-      v.null(),
-      v.pipe(
-        v.number(m.v_NaN({}, {locale})),
-        v.maxValue(max, m.v_atMost({max}, {locale})),
-        v.transform((value) => value.toString()),
-        v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
-      ),
-    ]),
+    v.union(
+      [
+        v.null(),
+        v.pipe(
+          v.number(),
+          v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
+          v.maxValue(max, m.v_atMost({max}, {locale})),
+          v.transform((value) => value.toString()),
+          v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
+        ),
+      ],
+      m.v_NaN({}, {locale}),
+    ),
   );
 }
 
@@ -232,16 +246,20 @@ export function numberStringEmptyNullRange(
       }
       return value;
     }),
-    v.union([
-      v.null(),
-      v.pipe(
-        v.number(m.v_NaN({}, {locale})),
-        v.minValue(min, m.v_atLeast({min}, {locale})),
-        v.maxValue(max, m.v_atMost({max}, {locale})),
-        v.transform((value) => value.toString()),
-        v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
-      ),
-    ]),
+    v.union(
+      [
+        v.null(),
+        v.pipe(
+          v.number(),
+          v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
+          v.minValue(min, m.v_atLeast({min}, {locale})),
+          v.maxValue(max, m.v_atMost({max}, {locale})),
+          v.transform((value) => value.toString()),
+          v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
+        ),
+      ],
+      m.v_NaN({}, {locale}),
+    ),
   );
 }
 
@@ -362,23 +380,26 @@ export function numberStringFixedEmptyNullMinimum(
       if (trimmed === '') return null;
       return Number(trimmed);
     }),
-    v.union([
-      v.null(),
-      v.pipe(
-        v.number(m.v_NaN({}, {locale})),
-        v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
-        v.minValue(min, m.v_atLeast({min}, {locale})),
-        v.check(
-          (value) => {
-            const shifted = value * 10 ** fractionDigits;
-            return Math.abs(shifted - Math.trunc(shifted)) < Number.EPSILON;
-          },
-          m.v_overPrecision({fractionDigits}, {locale}),
+    v.union(
+      [
+        v.null(),
+        v.pipe(
+          v.number(),
+          v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
+          v.minValue(min, m.v_atLeast({min}, {locale})),
+          v.check(
+            (value) => {
+              const shifted = value * 10 ** fractionDigits;
+              return Math.abs(shifted - Math.trunc(shifted)) < Number.EPSILON;
+            },
+            m.v_overPrecision({fractionDigits}, {locale}),
+          ),
+          v.transform((value) => value.toFixed(fractionDigits)),
+          v.string(),
         ),
-        v.transform((value) => value.toFixed(fractionDigits)),
-        v.string(),
-      ),
-    ]),
+      ],
+      m.v_NaN({}, {locale}),
+    ),
   );
 }
 
@@ -397,23 +418,26 @@ export function numberStringFixedEmptyNullMaximum(
       if (trimmed === '') return null;
       return Number(trimmed);
     }),
-    v.union([
-      v.null(),
-      v.pipe(
-        v.number(m.v_NaN({}, {locale})),
-        v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
-        v.maxValue(max, m.v_atMost({max}, {locale})),
-        v.check(
-          (value) => {
-            const shifted = value * 10 ** fractionDigits;
-            return Math.abs(shifted - Math.trunc(shifted)) < Number.EPSILON;
-          },
-          m.v_overPrecision({fractionDigits}, {locale}),
+    v.union(
+      [
+        v.null(),
+        v.pipe(
+          v.number(),
+          v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
+          v.maxValue(max, m.v_atMost({max}, {locale})),
+          v.check(
+            (value) => {
+              const shifted = value * 10 ** fractionDigits;
+              return Math.abs(shifted - Math.trunc(shifted)) < Number.EPSILON;
+            },
+            m.v_overPrecision({fractionDigits}, {locale}),
+          ),
+          v.transform((value) => value.toFixed(fractionDigits)),
+          v.string(),
         ),
-        v.transform((value) => value.toFixed(fractionDigits)),
-        v.string(),
-      ),
-    ]),
+      ],
+      m.v_NaN({}, {locale}),
+    ),
   );
 }
 
@@ -434,23 +458,26 @@ export function numberStringFixedEmptyNullRange(
       if (trimmed === '') return null;
       return Number(trimmed);
     }),
-    v.union([
-      v.null(),
-      v.pipe(
-        v.number(m.v_NaN({}, {locale})),
-        v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
-        v.minValue(min, m.v_atLeast({min}, {locale})),
-        v.maxValue(max, m.v_atMost({max}, {locale})),
-        v.check(
-          (value) => {
-            const shifted = value * 10 ** fractionDigits;
-            return Math.abs(shifted - Math.trunc(shifted)) < Number.EPSILON;
-          },
-          m.v_overPrecision({fractionDigits}, {locale}),
+    v.union(
+      [
+        v.null(),
+        v.pipe(
+          v.number(),
+          v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
+          v.minValue(min, m.v_atLeast({min}, {locale})),
+          v.maxValue(max, m.v_atMost({max}, {locale})),
+          v.check(
+            (value) => {
+              const shifted = value * 10 ** fractionDigits;
+              return Math.abs(shifted - Math.trunc(shifted)) < Number.EPSILON;
+            },
+            m.v_overPrecision({fractionDigits}, {locale}),
+          ),
+          v.transform((value) => value.toFixed(fractionDigits)),
+          v.string(),
         ),
-        v.transform((value) => value.toFixed(fractionDigits)),
-        v.string(),
-      ),
-    ]),
+      ],
+      m.v_NaN({}, {locale}),
+    ),
   );
 }

@@ -73,7 +73,6 @@ test('Test numberStringFixed()', () => {
   parsed = v.safeParse(numberStringFixed(2), '1.234');
   expect(parsed.success).toBe(false);
   parsed = v.safeParse(numberStringFixed(2), 1.234);
-  console.log(parsed.issues);
   expect(parsed.success).toBe(false);
   parsed = v.safeParse(numberStringFixed(2), ' ');
   expect(parsed.success).toBe(false);
@@ -99,7 +98,6 @@ test('Test numberStringFixedEmptyNull()', () => {
   parsed = v.safeParse(numberStringFixedEmptyNull(2), '1.234');
   expect(parsed.success).toBe(false);
   parsed = v.safeParse(numberStringFixedEmptyNull(2), 1.234);
-  console.log(parsed.issues);
   expect(parsed.success).toBe(false);
   parsed = v.safeParse(numberStringFixedEmptyNull(2), ' ');
   expect(parsed.success).toBe(true);
