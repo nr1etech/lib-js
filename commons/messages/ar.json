@@ -1,0 +1,8 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "v_atLeast": "يجب أن يكون على الأقل {min}",
+  "v_atMost": "يجب ألا يتجاوز {max}",
+  "v_invalidValue": "قيمة غير صالحة",
+  "v_NaN": "يجب أن يكون رقمًا",
+  "v_overPrecision": "قد يحتوي فقط على {fractionDigits} منزلة عشرية"
+}

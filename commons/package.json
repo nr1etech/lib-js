@@ -1,7 +1,7 @@
 {
   "name": "@nr1e/commons",
   "description": "Common utilities for TypeScript projects",
-  "version": "0.4.7",
+  "version": "0.4.11",
   "type": "module",
   "author": "NR1E, Inc.",
   "publishConfig": {
@@ -17,11 +17,12 @@
   ],
   "scripts": {
     "prebuild": "prettier --check . && eslint .",
-    "build": "tsc",
+    "build": "pnpx @inlang/paraglide-js compile --project ./project.inlang --outdir ./src/paraglide && tsc",
     "watch": "tsc -w",
     "test": "vitest run src",
     "clean": "rm -rf dist",
-    "fmt": "prettier --write ."
+    "fmt": "prettier --write .",
+    "machine-translate": "npx @inlang/cli machine translate --project project.inlang"
   },
   "devDependencies": {
     "@eslint/js": "catalog:",
@@ -32,7 +33,9 @@
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
     "valibot": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "@inlang/paraglide-js": "catalog:",
+    "@inlang/cli": "catalog:"
   },
   "dependencies": {
     "ksuid": "catalog:",
@@ -75,6 +78,10 @@
     "./os": {
       "import": "./dist/os/index.js",
       "types": "./dist/os/index.d.ts"
+    },
+    "./valibot": {
+      "import": "./dist/valibot/index.js",
+      "types": "./dist/valibot/index.d.ts"
     },
     "./validator": {
       "import": "./dist/validator/index.js",

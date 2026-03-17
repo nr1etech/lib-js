@@ -1,5 +1,26 @@
 # @nr1e/commons
 
+## 0.4.11
+### Patch Changes
+
+- dbf9ae4: Added translations
+- 7a2cb71: Added additional valibot functions
+
+## 0.4.10
+### Patch Changes
+
+- 64e2aaf: Refactored stringNumber functions
+
+## 0.4.9
+### Patch Changes
+
+- 67d7616: Added localization and corrected schemas
+
+## 0.4.8
+### Patch Changes
+
+- 4bac01b: Added valibot module
+
 ## 0.4.7
 ### Patch Changes
 
