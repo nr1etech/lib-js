@@ -28,7 +28,7 @@ export function createUSPSClient(config: USPSClientConfig): USPSClient {
   const baseUrl = config.baseUrl ?? "https://apis.usps.com";
   const accessToken = config.accessToken;
 
-  const get = async <T,>(input: GetInput): Promise<T> => {
+  const get = async <T>(input: GetInput): Promise<T> => {
     const url = new URL(input.path, baseUrl);
     if (input.params) {
       for (const [key, value] of Object.entries(input.params)) {
@@ -48,7 +48,7 @@ export function createUSPSClient(config: USPSClientConfig): USPSClient {
     return (await response.json()) as T;
   };
 
-  const post = async <T,>(input: PostInput): Promise<T> => {
+  const post = async <T>(input: PostInput): Promise<T> => {
     const url = new URL(input.path, baseUrl);
     const response = await fetch(url, {
       headers: {
