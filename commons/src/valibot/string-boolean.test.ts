@@ -1,0 +1,31 @@
+import {expect, test} from 'vitest';
+import * as v from 'valibot';
+import {stringBoolean} from './string-boolean.js';
+
+test('Test stringBoolean()', () => {
+  let parsed = v.safeParse(stringBoolean(), true);
+  expect(parsed.success).toBe(true);
+  expect(parsed.output).toBe(true);
+  parsed = v.safeParse(stringBoolean(), false);
+  expect(parsed.success).toBe(true);
+  expect(parsed.output).toBe(false);
+  parsed = v.safeParse(stringBoolean(), 'true');
+  expect(parsed.success).toBe(true);
+  expect(parsed.output).toBe(true);
+  parsed = v.safeParse(stringBoolean(), 'false');
+  expect(parsed.success).toBe(true);
+  expect(parsed.output).toBe(false);
+  parsed = v.safeParse(stringBoolean(), 'yes');
+  expect(parsed.success).toBe(true);
+  expect(parsed.output).toBe(true);
+  parsed = v.safeParse(stringBoolean(), 'no');
+  expect(parsed.success).toBe(true);
+  expect(parsed.output).toBe(false);
+  parsed = v.safeParse(stringBoolean(), ' no ');
+  expect(parsed.success).toBe(true);
+  expect(parsed.output).toBe(false);
+  parsed = v.safeParse(stringBoolean(), '');
+  expect(parsed.success).toBe(false);
+  parsed = v.safeParse(stringBoolean(), ' ');
+  expect(parsed.success).toBe(false);
+});
