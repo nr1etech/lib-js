@@ -37,16 +37,16 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.mts"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./addresses": {
-      "import": "./dist/addresses/index.mjs",
-      "types": "./dist/addresses/index.d.mts"
+      "import": "./dist/addresses/index.js",
+      "types": "./dist/addresses/index.d.ts"
     },
     "./oauth": {
-      "import": "./dist/oauth/index.mjs",
-      "types": "./dist/oauth/index.d.mts"
+      "import": "./dist/oauth/index.js",
+      "types": "./dist/oauth/index.d.ts"
     }
   }
 }
