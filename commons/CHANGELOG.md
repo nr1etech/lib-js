@@ -1,5 +1,10 @@
 # @nr1e/commons
 
+## 0.4.15
+### Patch Changes
+
+- 6638a61: Fixed some error message outputs
+
 ## 0.4.14
 ### Patch Changes
 
