@@ -51,7 +51,7 @@ export function createAdyenClient(config: AdyenClientConfig): AdyenClient {
   const apiKey = config.apiKey;
   const env = config.env;
 
-  const get = async <T,>(input: GetInput): Promise<T> => {
+  const get = async <T>(input: GetInput): Promise<T> => {
     const response = await fetch(new URL(input.path, input.baseUrl(env)), {
       headers: {
         'Accept': 'application/json',
@@ -65,7 +65,7 @@ export function createAdyenClient(config: AdyenClientConfig): AdyenClient {
     return (await response.json()) as T;
   };
 
-  const post = async <T,>(input: PostInput): Promise<T> => {
+  const post = async <T>(input: PostInput): Promise<T> => {
     const response = await fetch(new URL(input.path, input.baseUrl(env)), {
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export function createAdyenClient(config: AdyenClientConfig): AdyenClient {
     return (await response.json()) as T;
   };
 
-  const patch = async <T,>(input: PatchInput): Promise<T> => {
+  const patch = async <T>(input: PatchInput): Promise<T> => {
     const response = await fetch(new URL(input.path, input.baseUrl(env)), {
       headers: {
         'Content-Type': 'application/json',
