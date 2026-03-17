@@ -1,5 +1,10 @@
 # @nr1e/commons
 
+## 0.4.13
+### Patch Changes
+
+- 670dcdc: Fixed paraglide exports
+
 ## 0.4.12
 ### Patch Changes
 
