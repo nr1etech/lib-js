@@ -1,11 +1,10 @@
 import {
-  default as pino,
-  Bindings,
-  Logger as PLogger,
-  TransportSingleOptions,
-  TransportPipelineOptions,
-  TransportMultiOptions,
-} from 'pino';
+  configureSync,
+  getLogger,
+  type Sink,
+  type LogRecord,
+} from '@logtape/logtape';
+import * as os from 'os';
 
 /**
  * The log levels supported by this library.
@@ -80,8 +79,18 @@ export interface Entry {
  */
 export type Context = Record<string, unknown>;
 
+const levelValues: Record<LogLevel, number> = {
+  trace: 10,
+  debug: 20,
+  info: 30,
+  warn: 40,
+  error: 50,
+  fatal: 60,
+  silent: Infinity,
+};
+
 /**
- * Wrapper around a pino logger that enforces a logging pattern similar to Zerolog and provides
+ * Wrapper around a logtape logger that enforces a logging pattern similar to Zerolog and provides
  * an API that better supports the NR1E logging standard. Instances of this class should not be
  * shared between threads/workers. Instead, create a new child logger for each thread. The logger
  * itself is meant to be passed around as parameters to functions to support the contextual
@@ -90,18 +99,26 @@ export type Context = Record<string, unknown>;
 export class Logger {
   public readonly svc: string;
   public readonly name: string | undefined;
-  protected log: PLogger;
+  protected _bindings: Context;
+  protected _level: LogLevel;
+  protected _levelValue: number;
   protected entryCtx: Context;
   protected entry: Entry;
-  protected entryLevel:
-    | ((ctx: Context, msg?: string, ...args: string[]) => void)
-    | undefined;
+  protected entryLevel: LogLevel | null;
 
-  constructor(log: PLogger, svc: string, name?: string) {
+  constructor(
+    svc: string,
+    name?: string,
+    bindings: Context = {},
+    level: LogLevel = 'info',
+  ) {
     this.svc = svc;
     this.name = name;
-    this.log = log;
+    this._bindings = {...bindings};
+    this._level = level;
+    this._levelValue = levelValues[level] ?? 30;
     this.entryCtx = {};
+    this.entryLevel = null;
     this.entry = {
       msg: this.msg.bind(this),
       send: this.send.bind(this),
@@ -149,155 +166,185 @@ export class Logger {
         message: err.message,
         stack: err.stack,
       };
+    } else if (typeof err === 'object' && err !== null) {
+      this.entryCtx['err'] = {
+        ...(err as Record<string, unknown>),
+        type:
+          (err as {constructor?: {name?: string}}).constructor?.name ??
+          'Object',
+      };
     } else {
       this.entryCtx['err'] = err;
     }
     return this.entry;
   }
 
+  private _doLog(level: LogLevel, msg: string, extraCtx: Context): void {
+    if (level === 'silent') return;
+    if (this._levelValue > (levelValues[level] ?? 30)) return;
+    const allProps: Record<string, unknown> = {...this._bindings, ...extraCtx};
+    const logger = getLogger([this.svc]);
+    switch (level) {
+      case 'trace':
+        logger.trace(msg, allProps);
+        break;
+      case 'debug':
+        logger.debug(msg, allProps);
+        break;
+      case 'info':
+        logger.info(msg, allProps);
+        break;
+      case 'warn':
+        logger.warn(msg, allProps);
+        break;
+      case 'error':
+        logger.error(msg, allProps);
+        break;
+      case 'fatal':
+        logger.fatal(msg, allProps);
+        break;
+    }
+  }
+
   protected msg(msg: string, ...args: string[]): void {
-    const level =
-      this.entryLevel?.bind(this.log) ?? this.log.trace.bind(this.log);
-    level(this.entryCtx, msg, ...args);
+    const level = this.entryLevel ?? 'trace';
+    let formattedMsg = msg;
+    for (const arg of args) {
+      formattedMsg = formattedMsg.replace('%s', arg);
+    }
+    this._doLog(level, formattedMsg, {...this.entryCtx});
     this.entryCtx = {};
-    this.entryLevel = undefined;
+    this.entryLevel = null;
   }
 
   protected send(): void {
-    const level = this.entryLevel ?? this.log.trace;
-    level(this.entryCtx);
+    const level = this.entryLevel ?? 'trace';
+    this._doLog(level, '', {...this.entryCtx});
     this.entryCtx = {};
-    this.entryLevel = undefined;
+    this.entryLevel = null;
   }
 
   thread(thread: string | null | undefined): Logger {
     if (thread) {
-      this.log.setBindings({thread});
+      this._bindings.thread = thread;
     }
     return this;
   }
 
   pid(pid: number | null | undefined): Logger {
     if (pid) {
-      this.log.setBindings({pid});
+      this._bindings.pid = pid;
     }
     return this;
   }
 
   host(host: string | null | undefined): Logger {
     if (host) {
-      this.log.setBindings({host});
+      this._bindings.host = host;
     }
     return this;
   }
 
   ip(ip: string | null | undefined): Logger {
     if (ip) {
-      this.log.setBindings({ip});
+      this._bindings.ip = ip;
     }
     return this;
   }
 
   cip(cip: string | null | undefined): Logger {
     if (cip) {
-      this.log.setBindings({cip});
+      this._bindings.cip = cip;
     }
     return this;
   }
 
   dtrace(dt: DistributedTraceContext | null | undefined): Logger {
     if (dt) {
-      this.log.setBindings({dt});
+      this._bindings.dt = dt;
     }
     return this;
   }
 
   rid(rid: string | null | undefined): Logger {
     if (rid) {
-      this.log.setBindings({rid});
+      this._bindings.rid = rid;
     }
     return this;
   }
 
   child(name: string): Logger {
-    return new Logger(this.log.child({}), this.svc, name);
+    return new Logger(this.svc, name, {...this._bindings}, this._level);
   }
 
   isTrace(): boolean {
-    return this.log.levelVal <= 10;
+    return this._levelValue <= 10;
   }
 
   trace(): Entry {
-    this.entryLevel = this.log.trace;
+    this.entryLevel = 'trace';
     this.entry.str('name', this.name);
     return this.entry;
   }
 
   isDebug(): boolean {
-    return this.log.levelVal <= 20;
+    return this._levelValue <= 20;
   }
 
   debug(): Entry {
-    this.entryLevel = this.log.debug;
+    this.entryLevel = 'debug';
     this.entry.str('name', this.name);
     return this.entry;
   }
 
   isInfo(): boolean {
-    return this.log.levelVal <= 30;
+    return this._levelValue <= 30;
   }
 
   info(): Entry {
-    this.entryLevel = this.log.info;
+    this.entryLevel = 'info';
     this.entry.str('name', this.name);
     return this.entry;
   }
 
   isWarn(): boolean {
-    return this.log.levelVal <= 40;
+    return this._levelValue <= 40;
   }
 
   warn(): Entry {
-    this.entryLevel = this.log.warn;
+    this.entryLevel = 'warn';
     this.entry.str('name', this.name);
     return this.entry;
   }
 
   isError(): boolean {
-    return this.log.levelVal <= 50;
+    return this._levelValue <= 50;
   }
 
   error(): Entry {
-    this.entryLevel = this.log.error;
+    this.entryLevel = 'error';
     this.entry.str('name', this.name);
     return this.entry;
   }
 
   isFatal(): boolean {
-    return this.log.levelVal <= 60;
+    return this._levelValue <= 60;
   }
 
   fatal(): Entry {
-    this.entryLevel = this.log.fatal;
+    this.entryLevel = 'fatal';
     this.entry.str('name', this.name);
     return this.entry;
   }
 
   isSilent(): boolean {
-    return this.log.levelVal === Infinity;
+    return this._levelValue === Infinity;
   }
 
   silent(): Entry {
-    this.entryLevel = this.log.silent;
+    this.entryLevel = 'silent';
     this.entry.str('name', this.name);
     return this.entry;
-  }
-
-  /**
-   * Returns the inner pino logger if you need to do something that is not supported by this class.
-   */
-  pino(): PLogger {
-    return this.log;
   }
 
   /**
@@ -307,7 +354,7 @@ export class Logger {
    * @param ctx the context to add
    */
   ctx(ctx: Context): Logger {
-    this.log.setBindings(ctx);
+    Object.assign(this._bindings, ctx);
     return this;
   }
 
@@ -315,7 +362,7 @@ export class Logger {
    * Returns the current logger context.
    */
   getCtx(): Context {
-    return this.log.bindings() as Context;
+    return {...this._bindings};
   }
 
   /**
@@ -324,7 +371,8 @@ export class Logger {
    * @param level the log level to set
    */
   level(level: LogLevel): Logger {
-    this.log.level = level;
+    this._level = level;
+    this._levelValue = levelValues[level] ?? 30;
     return this;
   }
 
@@ -332,14 +380,14 @@ export class Logger {
    * Returns the current log level.
    */
   getLevel(): LogLevel {
-    return this.log.level as LogLevel;
+    return this._level;
   }
 }
 
 /**
  * Returns the default log level. If the LOGGING_LEVEL environment variable is set, it will be used.
  */
-function getDefaultLogLevel(): string | undefined {
+function getDefaultLogLevel(): LogLevel | undefined {
   if (typeof process === 'object') {
     const level = process.env.LOGGING_LEVEL;
     if (level && isLevel(level)) return level;
@@ -366,7 +414,7 @@ export interface LoggingConfig {
   name?: string;
 
   /**
-   * The default log level. If not provided, the environment variable LOGGING_LEVEL is used and if not found 'warn' is used.
+   * The default log level. If not provided, the environment variable LOGGING_LEVEL is used and if not found 'info' is used.
    */
   level?: LogLevel;
 
@@ -374,15 +422,6 @@ export interface LoggingConfig {
    * The context to add to the logger.
    */
   ctx?: Context;
-
-  /**
-   * The pino transport options.
-   */
-  transport?:
-    | TransportSingleOptions
-    | TransportMultiOptions
-    | TransportPipelineOptions
-    | undefined;
 
   /**
    * If true, the logger will be reinitialized even if it has already been initialized.
@@ -420,6 +459,54 @@ export interface LoggingConfig {
   timestampLabel?: string;
 }
 
+function createJsonSink(options: LoggingConfig): Sink {
+  const tsLabel = options.timestampLabel ?? 'time';
+  const levelFmt = options.logLevelFormat ?? 'uppercase';
+
+  return (record: LogRecord): void => {
+    const output: Record<string, unknown> = {};
+
+    // Format level (logtape uses 'warning'; map it back to 'warn')
+    const ourLevel: LogLevel =
+      record.level === 'warning' ? 'warn' : (record.level as LogLevel);
+    if (levelFmt === 'numeric') {
+      output.level = levelValues[ourLevel];
+    } else if (levelFmt === 'lowercase') {
+      output.level = ourLevel;
+    } else {
+      output.level = ourLevel.toUpperCase();
+    }
+
+    // Format timestamp
+    if (options.timestampFormat === 'unix') {
+      output[tsLabel] = Math.round(record.timestamp / 1000);
+    } else if (options.timestampFormat === 'iso') {
+      output[tsLabel] = new Date(record.timestamp).toISOString();
+    } else {
+      output[tsLabel] = record.timestamp;
+    }
+
+    // Copy properties from record
+    for (const [key, value] of Object.entries(record.properties)) {
+      output[key] = value;
+    }
+
+    // Add svc from the logger category
+    if (record.category.length > 0) {
+      output.svc = record.category[0];
+    }
+
+    // Extract message
+    const rawMsg =
+      typeof record.rawMessage === 'string'
+        ? record.rawMessage
+        : record.rawMessage.join('');
+    output.msg = rawMsg;
+
+    process.stdout.write(JSON.stringify(output) + '\n');
+  };
+}
+
 let root: Logger | undefined = undefined;
 
 /**
@@ -429,73 +516,54 @@ let root: Logger | undefined = undefined;
  */
 export function initialize(options: LoggingConfig): Logger {
   if (root === undefined || options.override) {
-    const mixins: Record<string, string | number> = {};
+    const initialBindings: Context = {};
     if (options.ip) {
-      mixins.ip = options.ip;
+      initialBindings.ip = options.ip;
     }
-    const svc = options.svc;
-    const plog = pino.pino({
-      level: options?.level ?? getDefaultLogLevel() ?? 'info',
-      browser: {asObject: true},
-      serializers: {},
-      mixin: () => {
-        return {
-          svc,
-          ...mixins,
-        };
-      },
-      transport: options?.transport,
-      timestamp() {
-        if (options.timestampFormat === 'unix') {
-          return `,"${options.timestampLabel ?? 'time'}":${Math.round(Date.now() / 1000.0)}`;
-        } else if (options.timestampFormat === 'iso') {
-          return `,"${options.timestampLabel ?? 'time'}":"${new Date(Date.now()).toISOString()}"`;
-        } else {
-          return `,"${options.timestampLabel ?? 'time'}":${Date.now()}`;
-        }
-      },
-      formatters: {
-        ...(!options.logLevelFormat || options.logLevelFormat === 'uppercase'
-          ? {
-              level(label) {
-                return {level: label.toUpperCase()};
-              },
-            }
-          : {}),
-        ...(options.logLevelFormat === 'lowercase'
-          ? {
-              level(label) {
-                return {level: label};
-              },
-            }
-          : {}),
-        bindings: (bindings: Bindings) => {
-          if (!options.includeHost) {
-            delete bindings.hostname;
-          } else {
-            bindings = {
-              ...bindings,
-              host: bindings.hostname,
-            };
-            delete bindings.hostname;
-          }
-          if (!options.includePid) {
-            delete bindings.pid;
-          }
-          return bindings;
-        },
-      },
-    });
+    if (options.includePid && typeof process !== 'undefined') {
+      initialBindings.pid = process.pid;
+    }
+    if (options.includeHost) {
+      try {
+        initialBindings.host = os.hostname();
+      } catch {
+        // ignore if hostname() is unavailable
+      }
+    }
     if (options.ctx) {
-      plog.setBindings(options.ctx);
+      Object.assign(initialBindings, options.ctx);
     }
-    root = new Logger(plog, svc, options.name ?? 'root');
+
+    configureSync({
+      sinks: {
+        stdout: createJsonSink(options),
+      },
+      loggers: [
+        {
+          category: [options.svc],
+          sinks: ['stdout'],
+          lowestLevel: 'trace',
+        },
+        {
+          category: ['logtape', 'meta'],
+          lowestLevel: null,
+        },
+      ],
+      reset: true,
+    });
+
+    root = new Logger(
+      options.svc,
+      options.name ?? 'root',
+      initialBindings,
+      options.level ?? getDefaultLogLevel() ?? 'info',
+    );
   }
   return root;
 }
 
 /**
- * Returns the root logger if it has been initialized. If not, an error is thrown.
+ * Returns true if the logger has been initialized.
  */
 export function isInitialized(): boolean {
   return root !== undefined;
@@ -505,10 +573,7 @@ export function isInitialized(): boolean {
  * Shuts down the logger and unsets the root logger.
  */
 export function shutdown() {
-  if (root) {
-    root.pino().flush();
-    root = undefined;
-  }
+  root = undefined;
 }
 
 function getProxiedRootLogger(): Logger {
@@ -580,8 +645,8 @@ function createProxiedLogger(name?: string, log?: Logger): Logger {
           return (...args: never[]) => {
             if (!root) throw new Error('Logger has not been initialized');
             const realLogger = log
-              ? new Logger(log.pino().child({name}), log.svc, name)
-              : new Logger(root.pino().child({name}), root.svc, name);
+              ? new Logger(log.svc, name, {...log.getCtx()}, log.getLevel())
+              : new Logger(root.svc, name, {...root.getCtx()}, root.getLevel());
             const method = realLogger[prop as keyof typeof realLogger];
             if (typeof method === 'function') {
               // @ts-expect-error - TS doesn't like the bind call
@@ -611,7 +676,7 @@ export function getRootLogger(): Logger {
  */
 export function newLogger(name: string): Logger {
   if (root) {
-    return new Logger(root.pino().child({}), root.svc, name);
+    return new Logger(root.svc, name, {...root.getCtx()}, root.getLevel());
   }
   return createProxiedLogger(name);
 }

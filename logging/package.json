@@ -33,12 +33,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "pino": "catalog:",
-    "pino-abstract-transport": "catalog:",
-    "sonic-boom": "catalog:"
-  },
-  "peerDependencies": {
-    "pino": "catalog:"
+    "@logtape/logtape": "catalog:"
   },
   "exports": {
     ".": {
