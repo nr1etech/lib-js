@@ -43,6 +43,10 @@
     "uuid": "catalog:"
   },
   "exports": {
+    "./paraglide": {
+      "import": "./dist/paraglide/runtime.js",
+      "types": "./dist/paraglide/runtime.d.ts"
+    },
     "./bitsnbytes": {
       "import": "./dist/bitsnbytes/index.js",
       "types": "./dist/bitsnbytes/index.d.ts"
