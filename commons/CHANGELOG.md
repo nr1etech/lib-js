@@ -1,5 +1,10 @@
 # @nr1e/commons
 
+## 0.4.14
+### Patch Changes
+
+- c8d2160: Added paraglide export
+
 ## 0.4.13
 ### Patch Changes
 
