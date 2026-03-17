@@ -25,6 +25,7 @@ export * from './components/refresh-button';
 export * from './components/select-field';
 export * from './components/session-watcher';
 export * from './components/submit-button';
+export * from './components/table-grid';
 export * from './components/text-field';
 export * from './components/textarea-field';
 export * from './components/theme-selector';
