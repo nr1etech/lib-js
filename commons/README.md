@@ -14,6 +14,7 @@ This project provides reusable components commonly needed in TypeScript projects
 | `@nr1e/commons/lang`       | Language utilities for currency, datetime, equality, merge, sleep, string, and type functions |
 | `@nr1e/commons/oauth`      | OAuth 2.0 cryptographic functions (PKCE)                                                      |
 | `@nr1e/commons/os`         | Operating system utilities including environment variable helpers                             |
+| `@nr1e/commons/valibot`    | Valibot utilities and helper functions                                                        |
 | `@nr1e/commons/validator`  | Input validation utilities                                                                    |
 
 [npm-url]: https://npmjs.org/package/@nr1e/commons-js
