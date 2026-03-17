@@ -4,7 +4,7 @@ import {m} from '../paraglide/messages.js';
 
 export function numberString(locale?: Locale) {
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     v.transform((value) => {
       if (typeof value === 'number') return value.toString();
       if (typeof value === 'string' && value.trim() !== '')
@@ -17,7 +17,7 @@ export function numberString(locale?: Locale) {
 
 export function numberStringEmptyNull(locale?: Locale) {
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     v.transform((value) => {
       if (typeof value === 'number') return value.toString();
       if (typeof value === 'string') {
@@ -36,7 +36,7 @@ export function numberStringEmptyNull(locale?: Locale) {
 
 export function numberStringFixed(fractionDigits: number, locale?: Locale) {
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     // 1. Normalize early (so we can validate consistently)
     v.transform((value) => {
       if (typeof value === 'number') return value;
@@ -65,7 +65,7 @@ export function numberStringFixedEmptyNull(
   locale?: Locale,
 ) {
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     // 1. Normalize early (so we can validate consistently)
     v.transform((value) => {
       if (typeof value === 'number') return value;
@@ -95,7 +95,7 @@ export function numberStringFixedEmptyNull(
 export function numberStringMinimum(min: number | string, locale?: Locale) {
   if (typeof min === 'string') min = Number(min);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     v.transform((value) => {
       if (typeof value === 'number') return value;
       if (typeof value === 'string' && value.trim() !== '') {
@@ -115,7 +115,7 @@ export function numberStringMinimum(min: number | string, locale?: Locale) {
 export function numberStringMaximum(max: number | string, locale?: Locale) {
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     v.transform((value) => {
       if (typeof value === 'number') return value;
       if (typeof value === 'string' && value.trim() !== '') {
@@ -140,7 +140,7 @@ export function numberStringRange(
   if (typeof min === 'string') min = Number(min);
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     v.transform((value) => {
       if (typeof value === 'number') return value;
       if (typeof value === 'string' && value.trim() !== '') {
@@ -164,7 +164,7 @@ export function numberStringEmptyNullMinimum(
 ) {
   if (typeof min === 'string') min = Number(min);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     v.transform((value) => {
       if (typeof value === 'number') return value;
       if (typeof value === 'string') {
@@ -192,7 +192,7 @@ export function numberStringEmptyNullMaximum(
 ) {
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     v.transform((value) => {
       if (typeof value === 'number') return value;
       if (typeof value === 'string') {
@@ -222,7 +222,7 @@ export function numberStringEmptyNullRange(
   if (typeof min === 'string') min = Number(min);
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     v.transform((value) => {
       if (typeof value === 'number') return value;
       if (typeof value === 'string') {
@@ -252,7 +252,7 @@ export function numberStringFixedMinimum(
 ) {
   if (typeof min === 'string') min = Number(min);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     // 1. Normalize early (so we can validate consistently)
     v.transform((value) => {
       if (typeof value === 'number') return value;
@@ -285,7 +285,7 @@ export function numberStringFixedMaximum(
 ) {
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     // 1. Normalize early (so we can validate consistently)
     v.transform((value) => {
       if (typeof value === 'number') return value;
@@ -320,7 +320,7 @@ export function numberStringFixedRange(
   if (typeof min === 'string') min = Number(min);
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     // 1. Normalize early (so we can validate consistently)
     v.transform((value) => {
       if (typeof value === 'number') return value;
@@ -354,7 +354,7 @@ export function numberStringFixedEmptyNullMinimum(
 ) {
   if (typeof min === 'string') min = Number(min);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     // 1. Normalize early (so we can validate consistently)
     v.transform((value) => {
       if (typeof value === 'number') return value;
@@ -389,7 +389,7 @@ export function numberStringFixedEmptyNullMaximum(
 ) {
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     // 1. Normalize early (so we can validate consistently)
     v.transform((value) => {
       if (typeof value === 'number') return value;
@@ -426,7 +426,7 @@ export function numberStringFixedEmptyNullRange(
   if (typeof min === 'string') min = Number(min);
   if (typeof max === 'string') max = Number(max);
   return v.pipe(
-    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()], m.v_NaN({}, {locale})),
     // 1. Normalize early (so we can validate consistently)
     v.transform((value) => {
       if (typeof value === 'number') return value;
