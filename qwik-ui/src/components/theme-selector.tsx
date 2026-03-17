@@ -23,11 +23,13 @@ function toParaglideLocale(locale: string): Locale {
 
 export function themeToName(theme: string, displayLocale?: Locale) {
   const messageKey = `theme_${theme.replace(/-/g, '_')}`;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const m = allMessages as any;
   if (messageKey in m && typeof m[messageKey] === 'function') {
     if (displayLocale) {
       return (
         m[messageKey as keyof typeof m] as (
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           inputs: any,
           options: {locale: Locale},
         ) => string

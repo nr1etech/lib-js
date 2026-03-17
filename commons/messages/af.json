@@ -1,6 +1,8 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "v_NaN": "Moet 'n getal wees",
   "v_atLeast": "Moet ten minste {min} wees",
-  "v_atMost": "Moet hoogstens {max} wees"
+  "v_atMost": "Moet hoogstens {max} wees",
+  "v_invalidValue": "Nie 'n geldige waarde nie",
+  "v_NaN": "Moet 'n getal wees",
+  "v_overPrecision": "Mag slegs {fractionDigits} desimale plekke hê"
 }

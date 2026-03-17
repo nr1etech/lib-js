@@ -1,6 +1,8 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "v_NaN": "Must be a number",
   "v_atLeast": "Must be at least {min}",
-  "v_atMost": "Must be at most {max}"
+  "v_atMost": "Must be at most {max}",
+  "v_invalidValue": "Not a valid value",
+  "v_NaN": "Must be a number",
+  "v_overPrecision": "May only have {fractionDigits} decimal places"
 }
