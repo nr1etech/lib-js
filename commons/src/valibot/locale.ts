@@ -1,4 +1,4 @@
-import {locales, getLocale, setLocale} from '../paraglide/runtime.js';
+import * as p from '../paraglide/runtime.js';
 
 export type Locale =
   | 'af'
@@ -13,4 +13,10 @@ export type Locale =
   | 'fr-CA'
   | 'fr-FR';
 
-export {locales, getLocale, setLocale};
+export function getLocale() {
+  return p.getLocale() as Locale;
+}
+
+export function setLocale(locale: Locale) {
+  p.setLocale(locale);
+}
