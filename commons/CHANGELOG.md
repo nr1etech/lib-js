@@ -1,5 +1,10 @@
 # @nr1e/commons
 
+## 0.4.17
+### Patch Changes
+
+- b8afbf8: Fixed error messages
+
 ## 0.4.16
 ### Patch Changes
 
