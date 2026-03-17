@@ -1,4 +1,4 @@
-import { USPSClient } from "../client.mjs";
+import { USPSClient } from "../client.js";
 
 export type GetZIPCodeInput = {
   streetAddress: string;

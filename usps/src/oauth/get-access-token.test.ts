@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { getAccessToken } from "./get-access-token.mjs";
+import { getAccessToken } from "./get-access-token.js";
 
 test("Test getAccessToken @int", async () => {
   const consumerKey = process.env.USPS_CONSUMER_KEY;

@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
-import { createUSPSClient, USPSClient } from "./client.mjs";
-import { getAccessToken } from "./oauth/get-access-token.mjs";
+import { createUSPSClient, USPSClient } from "./client.js";
+import { getAccessToken } from "./oauth/get-access-token.js";
 
 export type GetClientInput = {
   consumerKey: string;

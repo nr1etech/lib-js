@@ -1,8 +1,8 @@
 import { test, expect } from "vitest";
-import { getZIPCode } from "./get-zipcode.mjs";
-import { getClient } from "../helper.test.mjs";
+import { validateAddress } from "./validate-address.js";
+import { getClient } from "../helper.test.js";
 
-test("Test getZIPCode @int", async () => {
+test("Test validateAddress @int", async () => {
   const consumerKey = process.env.USPS_CONSUMER_KEY;
   const consumerSecret = process.env.USPS_CONSUMER_SECRET;
 
@@ -18,14 +18,13 @@ test("Test getZIPCode @int", async () => {
     consumerSecret,
   });
 
-  const result = await getZIPCode(client, {
+  const result = await validateAddress(client, {
     streetAddress: "1600 Pennsylvania Avenue NW",
     city: "Washington",
     state: "DC",
+    ZIPCode: "20500",
   });
 
   expect(result).toBeDefined();
-  expect(result.address).toBeDefined();
-  expect(result.address.ZIPCode).toBeDefined();
   console.log(result);
 });

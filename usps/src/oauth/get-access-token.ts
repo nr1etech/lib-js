@@ -1,4 +1,4 @@
-import { handleError } from "../errors.mjs";
+import { handleError } from "../errors.js";
 
 export type GetAccessTokenInput = {
   consumerKey: string;

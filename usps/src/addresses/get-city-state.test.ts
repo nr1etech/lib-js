@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
-import { getCityState } from "./get-city-state.mjs";
-import { getClient } from "../helper.test.mjs";
+import { getCityState } from "./get-city-state.js";
+import { getClient } from "../helper.test.js";
 
 test("Test getCityState @int", async () => {
   const consumerKey = process.env.USPS_CONSUMER_KEY;
