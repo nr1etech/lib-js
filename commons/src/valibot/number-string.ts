@@ -76,7 +76,7 @@ export function numberStringFixedEmptyNull(
     v.union([
       v.null(),
       v.pipe(
-        v.number(),
+        v.number(m.v_NaN({}, {locale})),
         v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
         v.check(
           (value) => {
@@ -104,7 +104,7 @@ export function numberStringMinimum(min: number | string, locale?: Locale) {
       return value;
     }),
     v.pipe(
-      v.number(),
+      v.number(m.v_NaN({}, {locale})),
       v.minValue(min, m.v_atLeast({min}, {locale})),
       v.transform((value) => value.toString()),
     ),
@@ -124,7 +124,7 @@ export function numberStringMaximum(max: number | string, locale?: Locale) {
       return value;
     }),
     v.pipe(
-      v.number(),
+      v.number(m.v_NaN({}, {locale})),
       v.maxValue(max, m.v_atMost({max}, {locale})),
       v.transform((value) => value.toString()),
     ),
@@ -149,7 +149,7 @@ export function numberStringRange(
       return value;
     }),
     v.pipe(
-      v.number(),
+      v.number(m.v_NaN({}, {locale})),
       v.minValue(min, m.v_atLeast({min}, {locale})),
       v.maxValue(max, m.v_atMost({max}, {locale})),
       v.transform((value) => value.toString()),
@@ -177,7 +177,7 @@ export function numberStringEmptyNullMinimum(
     v.union([
       v.null(),
       v.pipe(
-        v.number(),
+        v.number(m.v_NaN({}, {locale})),
         v.minValue(min, m.v_atLeast({min}, {locale})),
         v.transform((value) => value.toString()),
         v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
@@ -205,7 +205,7 @@ export function numberStringEmptyNullMaximum(
     v.union([
       v.null(),
       v.pipe(
-        v.number(),
+        v.number(m.v_NaN({}, {locale})),
         v.maxValue(max, m.v_atMost({max}, {locale})),
         v.transform((value) => value.toString()),
         v.pipe(v.string(), v.regex(/^-?\d+(\.\d+)?$/, m.v_NaN({}, {locale}))),
@@ -235,7 +235,7 @@ export function numberStringEmptyNullRange(
     v.union([
       v.null(),
       v.pipe(
-        v.number(),
+        v.number(m.v_NaN({}, {locale})),
         v.minValue(min, m.v_atLeast({min}, {locale})),
         v.maxValue(max, m.v_atMost({max}, {locale})),
         v.transform((value) => value.toString()),
@@ -365,7 +365,7 @@ export function numberStringFixedEmptyNullMinimum(
     v.union([
       v.null(),
       v.pipe(
-        v.number(),
+        v.number(m.v_NaN({}, {locale})),
         v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
         v.minValue(min, m.v_atLeast({min}, {locale})),
         v.check(
@@ -400,7 +400,7 @@ export function numberStringFixedEmptyNullMaximum(
     v.union([
       v.null(),
       v.pipe(
-        v.number(),
+        v.number(m.v_NaN({}, {locale})),
         v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
         v.maxValue(max, m.v_atMost({max}, {locale})),
         v.check(
@@ -437,7 +437,7 @@ export function numberStringFixedEmptyNullRange(
     v.union([
       v.null(),
       v.pipe(
-        v.number(),
+        v.number(m.v_NaN({}, {locale})),
         v.check((value) => Number.isFinite(value), m.v_NaN({}, {locale})),
         v.minValue(min, m.v_atLeast({min}, {locale})),
         v.maxValue(max, m.v_atMost({max}, {locale})),
