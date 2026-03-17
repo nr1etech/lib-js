@@ -1,5 +1,10 @@
 # @nr1e/commons
 
+## 0.4.16
+### Patch Changes
+
+- 055312c: Fixed error messages
+
 ## 0.4.15
 ### Patch Changes
 
