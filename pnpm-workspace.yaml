@@ -28,7 +28,7 @@ catalog:
   "@inlang/cli": "^3.0.0"
   "@inlang/paraglide-js": "^2.15.0"
   "@lucia-auth/adapter-test": "^5.0.2"
-  "@tailwindcss/vite": "^4.2.1"
+  "@tailwindcss/vite": "^4.2.2"
   "@types/aws-lambda": "8.10.161"
   "@types/node": "^24.10.13"
   "daisyui": "^5.5.19"
