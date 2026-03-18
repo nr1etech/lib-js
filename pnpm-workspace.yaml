@@ -6,7 +6,6 @@ packages:
   - 'lucia-adapter-dynamodb'
   - 'qwik-icons'
   - 'qwik-ui'
-  - 'usps'
   - '!**/dist/**'
 catalog:
   "@aws-sdk/client-bedrock-runtime": "^3.958.0"
