@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.7
+### Patch Changes
+
+- 8fef862: Added DynamoDB helper functions
+
 ## 1.0.6
 ### Patch Changes
 
