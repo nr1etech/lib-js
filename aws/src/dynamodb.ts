@@ -435,3 +435,392 @@ export async function executePaginatedScan<T = any>(
     page,
   };
 }
+
+/**
+ * Builds a dynamic DynamoDB update expression from an input object.
+ * Only includes fields that are defined (not undefined) and not in the excluded list.
+ *
+ * @param input - The input object containing fields to update
+ * @param options - Configuration options
+ * @param options.excludedFields - Fields to exclude from the update expression (e.g., 'id', 'createdAt')
+ * @param options.prefix - Prefix for nested objects (e.g., 'Detail', 'Data'). Set to empty string for no prefix. Default: 'Detail'
+ * @returns Object containing UpdateExpression, ExpressionAttributeNames, and ExpressionAttributeValues
+ */
+export function buildUpdateExpression(
+  input: Record<string, unknown>,
+  options: {
+    excludedFields?: string[];
+    prefix?: string;
+  } = {},
+): {
+  UpdateExpression: string;
+  ExpressionAttributeNames: Record<string, string>;
+  ExpressionAttributeValues: Record<string, unknown>;
+} {
+  const {excludedFields = [], prefix = 'Detail'} = options;
+
+  const updateExpression: string[] = [];
+  const expressionAttributeNames: Record<string, string> = {};
+  const expressionAttributeValues: Record<string, unknown> = {};
+
+  // Add prefix to attribute names if provided
+  const prefixKey = prefix ? `#${prefix.toLowerCase()}` : '';
+  if (prefix) {
+    expressionAttributeNames[prefixKey] = prefix;
+  }
+
+  // Build update expressions for all provided fields
+  for (const [key, value] of Object.entries(input)) {
+    if (!excludedFields.includes(key) && value !== undefined) {
+      const prefixPart = prefix ? `${prefixKey}.` : '';
+      updateExpression.push(`${prefixPart}#${key} = :${key}`);
+      expressionAttributeNames[`#${key}`] = key;
+      expressionAttributeValues[`:${key}`] = value;
+    }
+  }
+
+  return {
+    UpdateExpression: `SET ${updateExpression.join(', ')}`,
+    ExpressionAttributeNames: expressionAttributeNames,
+    ExpressionAttributeValues: expressionAttributeValues,
+  };
+}
+
+/**
+ * Executes a DynamoDB update operation that only succeeds if the item already exists.
+ *
+ * This function builds a dynamic update expression from the input object and applies
+ * an existence check condition. Unlike DynamoDB's default upsert behavior, this function
+ * will throw an error if you attempt to update a non-existent item.
+ *
+ * @template T - The type of the returned item or nested object
+ * @param input - Object containing the fields to update. Only defined values are included.
+ * @param tableName - The name of the DynamoDB table
+ * @param key - The primary key of the item to update (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`)
+ * @param options - Configuration options
+ * @param options.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @param options.excludedFields - Fields to exclude from the update (e.g., `['id', 'createdAt']`)
+ * @param options.prefix - Prefix for nested object updates (default: 'Detail'). Set to empty string for no prefix.
+ * @returns The updated item or nested object (based on prefix setting)
+ *
+ * @throws {ConditionalCheckFailedException} When the item doesn't exist in the table
+ * @throws {Error} When the key object is empty
+ *
+ * @example
+ * ```typescript
+ * // Update a user profile (with default 'Detail' prefix)
+ * const updated = await executeUpdate<UserProfile>(
+ *   { name: 'John Doe', email: 'john@example.com', updatedAt: new Date().toISOString() },
+ *   'MyTable',
+ *   { Pk: 'User#123', Sk: 'Profile' }
+ * );
+ * // Returns: updated.name, updated.email, etc. from the Detail object
+ *
+ * // Update without prefix (top-level attributes)
+ * const updated = await executeUpdate<User>(
+ *   { status: 'active', lastLogin: Date.now() },
+ *   'MyTable',
+ *   { Pk: 'User#123', Sk: 'Metadata' },
+ *   { prefix: '' }
+ * );
+ * // Returns: full item with top-level attributes
+ *
+ * // Exclude certain fields and add timestamp
+ * const updated = await executeUpdate<Product>(
+ *   { ...productData, updatedAt: new Date().toISOString() },
+ *   'Products',
+ *   { Pk: 'Product#456' },
+ *   { excludedFields: ['id', 'createdAt'] }
+ * );
+ * ```
+ */
+export async function executeUpdate<T>(
+  input: Record<string, unknown>,
+  tableName: string,
+  key: Record<string, unknown>,
+  options: {
+    client?: DynamoDBDocumentClient;
+    excludedFields?: string[];
+    prefix?: string;
+  } = {},
+): Promise<T> {
+  const {
+    UpdateExpression,
+    ExpressionAttributeNames,
+    ExpressionAttributeValues,
+  } = buildUpdateExpression(input, {
+    excludedFields: options.excludedFields,
+    prefix: options.prefix,
+  });
+
+  // Get the first key attribute name to use for existence check
+  const firstKeyName = Object.keys(key)[0];
+  if (!firstKeyName) {
+    throw new Error('Key object must contain at least one attribute');
+  }
+
+  // Add the key attribute to ExpressionAttributeNames for the condition
+  const conditionKeyAlias = '#__existsKey';
+  ExpressionAttributeNames[conditionKeyAlias] = firstKeyName;
+
+  const dynamoDBDocumentClient = options.client ?? getDynamoDBDocumentClient();
+  const result = await dynamoDBDocumentClient.send(
+    new UpdateCommand({
+      TableName: tableName,
+      Key: key,
+      UpdateExpression,
+      ExpressionAttributeNames,
+      ExpressionAttributeValues,
+      ConditionExpression: `attribute_exists(${conditionKeyAlias})`,
+      ReturnValues: 'ALL_NEW',
+    }),
+  );
+  if (!result.Attributes) {
+    throw new Error('Update failed: No attributes returned');
+  }
+  if (!options.prefix) {
+    return result.Attributes as T;
+  } else {
+    return result.Attributes?.[options.prefix] as T;
+  }
+}
+
+/**
+ * Executes a DynamoDB put operation to create or replace an item in the table.
+ *
+ * This function puts an entire item into DynamoDB. By default, it will NOT overwrite
+ * existing items (preventOverwrite is true by default). Set preventOverwrite to false
+ * if you want to allow replacing existing items.
+ *
+ * @template T - The type of the returned item
+ * @param item - The complete item to put into the table, including the primary key
+ * @param tableName - The name of the DynamoDB table
+ * @param key - The primary key of the item (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`). Used for the preventOverwrite condition.
+ * @param options - Configuration options
+ * @param options.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @param options.preventOverwrite - If true, the put will fail if an item with the same key already exists (default: true)
+ * @param options.returnValues - Specify what values to return. 'NONE' (default) or 'ALL_OLD' to return the previous item
+ * @returns The item that was put (or the old item if returnValues is 'ALL_OLD')
+ *
+ * @throws {ConditionalCheckFailedException} When preventOverwrite is true and the item already exists
+ * @throws {Error} When the key object is empty
+ *
+ * @example
+ * ```typescript
+ * // Create a new user (will fail if already exists - default behavior)
+ * const user = await executePut<User>(
+ *   {
+ *     Pk: 'User#123',
+ *     Sk: 'Profile',
+ *     Detail: {
+ *       name: 'John Doe',
+ *       email: 'john@example.com',
+ *       createdAt: new Date().toISOString()
+ *     }
+ *   },
+ *   'MyTable',
+ *   { Pk: 'User#123', Sk: 'Profile' }
+ * );
+ * // Throws ConditionalCheckFailedException if User#123 already exists
+ *
+ * // Allow overwriting existing item
+ * const user = await executePut<User>(
+ *   {
+ *     Pk: 'User#456',
+ *     Sk: 'Profile',
+ *     Detail: { name: 'Jane Doe', email: 'jane@example.com' }
+ *   },
+ *   'MyTable',
+ *   { Pk: 'User#456', Sk: 'Profile' },
+ *   { preventOverwrite: false }
+ * );
+ * // Will replace the item if User#456 already exists
+ *
+ * // Replace item and return the old version
+ * const oldUser = await executePut<User>(
+ *   {
+ *     Pk: 'User#789',
+ *     Sk: 'Profile',
+ *     Detail: { name: 'Updated Name', email: 'updated@example.com' }
+ *   },
+ *   'MyTable',
+ *   { Pk: 'User#789', Sk: 'Profile' },
+ *   { preventOverwrite: false, returnValues: 'ALL_OLD' }
+ * );
+ * // Returns the previous item data
+ * ```
+ */
+export async function executePut<T>(
+  item: Record<string, unknown>,
+  tableName: string,
+  key: Record<string, unknown>,
+  options: {
+    client?: DynamoDBDocumentClient;
+    preventOverwrite?: boolean;
+    returnValues?: 'NONE' | 'ALL_OLD';
+  } = {},
+): Promise<T | undefined> {
+  const {client, preventOverwrite = true, returnValues = 'NONE'} = options;
+
+  const dynamoDBDocumentClient = client ?? getDynamoDBDocumentClient();
+
+  const putCommandInput: PutCommandInput = {
+    TableName: tableName,
+    Item: item,
+    ReturnValues: returnValues,
+  };
+
+  // Add condition to prevent overwriting existing items if requested
+  if (preventOverwrite) {
+    const keyNames = Object.keys(key);
+    if (keyNames.length === 0) {
+      throw new Error('Key object must contain at least one attribute');
+    }
+
+    // Build condition expression checking that ALL key attributes don't exist
+    const keyConditions = keyNames.map((k) => `attribute_not_exists(${k})`);
+    putCommandInput.ConditionExpression = keyConditions.join(' AND ');
+  }
+
+  const result = await dynamoDBDocumentClient.send(
+    new PutCommand(putCommandInput),
+  );
+
+  // Return the old item if ALL_OLD was requested, otherwise return the item that was put
+  if (returnValues === 'ALL_OLD') {
+    return result.Attributes as T;
+  }
+  return item as T;
+}
+
+/**
+ * Executes a DynamoDB delete operation to remove an item from the table.
+ *
+ * @param tableName - The name of the DynamoDB table
+ * @param key - The primary key of the item to delete (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`)
+ * @param options - Configuration options
+ * @param options.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ *
+ * @example
+ * ```typescript
+ * await executeDelete('MyTable', { Pk: 'User#123', Sk: 'Profile' });
+ * ```
+ */
+export async function executeDelete(
+  tableName: string,
+  key: Record<string, unknown>,
+  options: {
+    client?: DynamoDBDocumentClient;
+  } = {},
+): Promise<void> {
+  const dynamoDBDocumentClient = options.client ?? getDynamoDBDocumentClient();
+
+  await dynamoDBDocumentClient.send(
+    new DeleteCommand({
+      TableName: tableName,
+      Key: key,
+    }),
+  );
+}
+
+/**
+ * Executes a DynamoDB get operation to retrieve an item from the table.
+ *
+ * @template T - The type of the returned item
+ * @param tableName - The name of the DynamoDB table
+ * @param key - The primary key of the item to retrieve (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`)
+ * @param options - Configuration options
+ * @param options.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @returns The item if found, or null if not found
+ *
+ * @example
+ * ```typescript
+ * const user = await executeGet<User>('MyTable', { Pk: 'User#123', Sk: 'Profile' });
+ * ```
+ */
+export async function executeGet<T>(
+  tableName: string,
+  key: Record<string, unknown>,
+  options: {
+    client?: DynamoDBDocumentClient;
+    prefix?: string;
+  } = {},
+): Promise<T | null> {
+  const dynamoDBDocumentClient = options.client ?? getDynamoDBDocumentClient();
+
+  const result = await dynamoDBDocumentClient.send(
+    new GetCommand({
+      TableName: tableName,
+      Key: key,
+    }),
+  );
+
+  const item = result.Item;
+  if (options.prefix) {
+    return (item?.[options.prefix] as T) ?? null;
+  }
+  if (options.prefix === null) {
+    return (item as T) ?? null;
+  }
+  return (item?.Detail as T) ?? null;
+}
+
+/**
+ * Executes a DynamoDB query on a secondary index and returns the first matching item.
+ *
+ * @template T - The type of the returned item
+ * @param tableName - The name of the DynamoDB table
+ * @param indexName - The name of the secondary index to query
+ * @param key - The key attributes to query (e.g., `{ Gs1Pk: 'User#123' }` or `{ Gs1Pk: 'User#123', Gs1Sk: 'Profile' }`)
+ * @param options - Configuration options
+ * @param options.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @returns The first matching item if found, or null if not found
+ *
+ * @example
+ * ```typescript
+ * // Query with just partition key
+ * const user = await executeGetFromIndex<User>('MyTable', 'Gs1', { Gs1Pk: 'User#123' });
+ *
+ * // Query with partition and sort key
+ * const user = await executeGetFromIndex<User>('MyTable', 'Gs1', { Gs1Pk: 'User#123', Gs1Sk: 'Profile' });
+ * ```
+ */
+export async function executeGetFromIndex<T>(
+  tableName: string,
+  indexName: string,
+  key: Record<string, unknown>,
+  options: {
+    client?: DynamoDBDocumentClient;
+    prefix?: string;
+  } = {},
+): Promise<T | null> {
+  const dynamoDBDocumentClient = options.client ?? getDynamoDBDocumentClient();
+
+  // Build KeyConditionExpression and ExpressionAttributeValues from key object
+  const keyConditions: string[] = [];
+  const expressionAttributeValues: Record<string, unknown> = {};
+
+  for (const [keyName, value] of Object.entries(key)) {
+    keyConditions.push(`${keyName} = :${keyName}`);
+    expressionAttributeValues[`:${keyName}`] = value;
+  }
+
+  const result = await dynamoDBDocumentClient.send(
+    new QueryCommand({
+      TableName: tableName,
+      IndexName: indexName,
+      KeyConditionExpression: keyConditions.join(' AND '),
+      ExpressionAttributeValues: expressionAttributeValues,
+      Limit: 1,
+    }),
+  );
+
+  const item = result.Items?.[0];
+  if (options.prefix) {
+    return (item?.[options.prefix] as T) ?? null;
+  }
+  if (options.prefix === null) {
+    return (item as T) ?? null;
+  }
+  return (item?.Detail as T) ?? null;
+}
