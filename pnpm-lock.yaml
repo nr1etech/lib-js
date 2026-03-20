@@ -58,8 +58,8 @@ catalogs:
       specifier: ^9.39.4
       version: 9.39.4
     '@inlang/cli':
-      specifier: ^3.0.0
-      version: 3.1.7
+      specifier: ^3.1.9
+      version: 3.1.9
     '@inlang/paraglide-js':
       specifier: ^2.15.0
       version: 2.15.0
@@ -259,7 +259,7 @@ importers:
         version: 9.39.4
       '@inlang/cli':
         specifier: 'catalog:'
-        version: 3.1.7
+        version: 3.1.9
       '@inlang/paraglide-js':
         specifier: 'catalog:'
         version: 2.15.0
@@ -454,7 +454,7 @@ importers:
         version: 9.39.4
       '@inlang/cli':
         specifier: 'catalog:'
-        version: 3.1.7
+        version: 3.1.9
       '@inlang/paraglide-js':
         specifier: 'catalog:'
         version: 2.15.0
@@ -1250,8 +1250,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@inlang/cli@3.1.7':
-    resolution: {integrity: sha512-aIp/0nnkYGy+d4qjrCQpeJUsknvzJM4bjUnw0JtZYDyKRaMTeE48Zc6KfneOrIy097yssT2v+oRFNRDXYzBvJw==}
+  '@inlang/cli@3.1.9':
+    resolution: {integrity: sha512-BfQM5O0tTjlSTtTYCb1soHHU6bxZnHmdBPTBrv4KnStUP2Dc68WydzYCwauiT54Y3mABdeSvWbNGd0SWpPSweQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -1265,6 +1265,10 @@ packages:
   '@inlang/sdk@2.8.0':
     resolution: {integrity: sha512-w1jysvUDTMgCaONklIgOJAp9dUDl0UhLbsdqfWEwY/GIqoc9IwpuHsrP3pzC+h3DfOpkMMDnDkTpPv8kIZ98iA==}
     engines: {node: '>=18.0.0'}
+
+  '@inlang/sdk@2.9.1':
+    resolution: {integrity: sha512-y0C3xaKo6pSGDr3p5OdreRVT3THJpgKVe1lLvG3BE4v9lskp3UfI9cPCbN8X2dpfLt/4ljtehMb5SykpMfJrMg==}
+    engines: {node: '>=20.0.0'}
 
   '@inquirer/ansi@2.0.3':
     resolution: {integrity: sha512-g44zhR3NIKVs0zUesa4iMzExmZpLUdTLRMCStqX3GE5NT6VkPcxQGJ+uC8tDgBUC/vB1rUhUd55cOf++4NZcmw==}
@@ -1428,6 +1432,10 @@ packages:
 
   '@lix-js/sdk@0.4.7':
     resolution: {integrity: sha512-pRbW+joG12L0ULfMiWYosIW0plmW4AsUdiPCp+Z8rAsElJ+wJ6in58zhD3UwUcd4BNcpldEGjg6PdA7e0RgsDQ==}
+    engines: {node: '>=18'}
+
+  '@lix-js/sdk@0.4.9':
+    resolution: {integrity: sha512-30mDkXpx704359oRrJI42bjfCspCiaMItngVBbPkiTGypS7xX4jYbHWQkXI8XuJ7VDB69D0MsVU6xfrBAIrM4A==}
     engines: {node: '>=18'}
 
   '@lix-js/server-protocol-schema@0.1.1':
@@ -3992,6 +4000,10 @@ packages:
     resolution: {integrity: sha512-FIyV/64EkKhJmjgC0g2hygpBv5RNWVPyNCqSAD7eTCv6eFWNIi4PN1UvdSJGicN/o35bnevgis4Y0UDC0qi8jQ==}
     engines: {node: '>=14.0.0'}
 
+  kysely@0.28.14:
+    resolution: {integrity: sha512-SU3lgh0rPvq7upc6vvdVrCsSMUG1h3ChvHVOY7wJ2fw4C9QEB7X3d5eyYEyULUX7UQtxZJtZXGuT6U2US72UYA==}
+    engines: {node: '>=20.0.0'}
+
   latest-version@9.0.0:
     resolution: {integrity: sha512-7W0vV3rqv5tokqkBAFV1LbR7HPOWzXQDpDgEuib/aJ1jsZZx6x3c2mBI+TJhJzOhkGeaLbCKEHXEXLfirtG2JA==}
     engines: {node: '>=18'}
@@ -5166,9 +5178,6 @@ packages:
     resolution: {integrity: sha512-anNNGpxNgjydD8p1lcJjxxH+XbjW6KR8Xs29owTrbcf3tOJ6IRblpyFob43HBkfxFJJTAfFQqugoEG2b1EsR0A==}
     peerDependencies:
       tailwindcss: '>=3.1.0 || >=4.0.0'
-
-  tailwindcss@4.2.1:
-    resolution: {integrity: sha512-/tBrSQ36vCleJkAOsy9kbNTgaxvGbyOamC30PRePTQe/o1MFwEKHQk4Cn7BNGaPtjp+PuUrByJehM1hgxfq4sw==}
 
   tailwindcss@4.2.2:
     resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}
@@ -7263,9 +7272,9 @@ snapshots:
   '@img/sharp-win32-x64@0.34.5':
     optional: true
 
-  '@inlang/cli@3.1.7':
+  '@inlang/cli@3.1.9':
     dependencies:
-      '@inlang/sdk': 2.8.0
+      '@inlang/sdk': 2.9.1
       esbuild-wasm: 0.19.12
     transitivePeerDependencies:
       - babel-plugin-macros
@@ -7292,6 +7301,16 @@ snapshots:
       '@sinclair/typebox': 0.31.28
       kysely: 0.27.6
       sqlite-wasm-kysely: 0.3.0(kysely@0.27.6)
+      uuid: 13.0.0
+    transitivePeerDependencies:
+      - babel-plugin-macros
+
+  '@inlang/sdk@2.9.1':
+    dependencies:
+      '@lix-js/sdk': 0.4.9
+      '@sinclair/typebox': 0.31.28
+      kysely: 0.28.14
+      sqlite-wasm-kysely: 0.3.0(kysely@0.28.14)
       uuid: 13.0.0
     transitivePeerDependencies:
       - babel-plugin-macros
@@ -7459,6 +7478,18 @@ snapshots:
       js-sha256: 0.11.1
       kysely: 0.27.6
       sqlite-wasm-kysely: 0.3.0(kysely@0.27.6)
+      uuid: 10.0.0
+    transitivePeerDependencies:
+      - babel-plugin-macros
+
+  '@lix-js/sdk@0.4.9':
+    dependencies:
+      '@lix-js/server-protocol-schema': 0.1.1
+      dedent: 1.5.1
+      human-id: 4.1.3
+      js-sha256: 0.11.1
+      kysely: 0.28.14
+      sqlite-wasm-kysely: 0.3.0(kysely@0.28.14)
       uuid: 10.0.0
     transitivePeerDependencies:
       - babel-plugin-macros
@@ -10321,6 +10352,8 @@ snapshots:
 
   kysely@0.27.6: {}
 
+  kysely@0.28.14: {}
+
   latest-version@9.0.0:
     dependencies:
       package-json: 10.0.1
@@ -11622,6 +11655,11 @@ snapshots:
       '@sqlite.org/sqlite-wasm': 3.48.0-build4
       kysely: 0.27.6
 
+  sqlite-wasm-kysely@0.3.0(kysely@0.28.14):
+    dependencies:
+      '@sqlite.org/sqlite-wasm': 3.48.0-build4
+      kysely: 0.28.14
+
   ssh-remote-port-forward@1.0.4:
     dependencies:
       '@types/ssh2': 0.5.52
@@ -11809,8 +11847,6 @@ snapshots:
   tailwindcss-animated@2.0.0(tailwindcss@4.2.2):
     dependencies:
       tailwindcss: 4.2.2
-
-  tailwindcss@4.2.1: {}
 
   tailwindcss@4.2.2: {}
 
