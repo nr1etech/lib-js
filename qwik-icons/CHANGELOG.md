@@ -1,5 +1,10 @@
 # @nr1e/qwik-icons
 
+## 0.0.34
+### Patch Changes
+
+- c5e37c0: Added MDI icons
+
 ## 0.0.33
 ### Patch Changes
 
