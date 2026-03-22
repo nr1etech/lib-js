@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.1.5
+### Patch Changes
+
+- a6612c1: Added options and placeholder fields to SelectField
+
 ## 2.1.4
 ### Patch Changes
 
