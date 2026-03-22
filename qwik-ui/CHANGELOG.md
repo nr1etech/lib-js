@@ -1,5 +1,10 @@
 # @nr1e/qwik-ui
 
+## 2.1.6
+### Patch Changes
+
+- 35e1f70: Added onChangeValue$ helper function to SelectField
+
 ## 2.1.5
 ### Patch Changes
 
