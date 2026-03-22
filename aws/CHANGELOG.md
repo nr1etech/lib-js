@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.8
+### Patch Changes
+
+- bb83463: Allowed prefix to be null on executeGet calls
+
 ## 1.0.7
 ### Patch Changes
 
