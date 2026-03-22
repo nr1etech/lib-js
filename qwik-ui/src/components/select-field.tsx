@@ -1,4 +1,4 @@
-import {component$, Slot} from '@builder.io/qwik';
+import {component$, Slot, type QRL} from '@builder.io/qwik';
 import type {PropsOf} from '@builder.io/qwik';
 
 export interface SelectFieldProps extends Omit<PropsOf<'select'>, 'children'> {
@@ -6,10 +6,20 @@ export interface SelectFieldProps extends Omit<PropsOf<'select'>, 'children'> {
   error?: string;
   placeholder?: string;
   options?: Record<string, string> | string[];
+  onChangeValue$?: QRL<
+    (value: string, target: HTMLSelectElement, event: Event) => void
+  >;
 }
 
 export const SelectField = component$((props: SelectFieldProps) => {
-  const {label, error, id, class: className, ...selectProps} = props;
+  const {
+    label,
+    error,
+    id,
+    class: className,
+    onChangeValue$,
+    ...selectProps
+  } = props;
 
   // Convert options to a normalized format
   const optionsEntries = Array.isArray(props.options)
@@ -27,6 +37,13 @@ export const SelectField = component$((props: SelectFieldProps) => {
       <select
         id={id}
         class={`select ${error ? 'select-error' : ''} ${className ?? ''}`}
+        onChange$={(e) => {
+          const target = e.target as HTMLSelectElement;
+          const value = target.value;
+          if (onChangeValue$) {
+            onChangeValue$(value, target, e);
+          }
+        }}
         {...selectProps}
       >
         {props.placeholder && (

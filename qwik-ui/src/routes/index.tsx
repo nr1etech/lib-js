@@ -67,6 +67,14 @@ export default component$(() => {
   const selectedLocale = useSignal<string>('auto');
   const displayLocale = useSignal<string>('en');
 
+  // Signals for SelectField demo selections
+  const selectField1 = useSignal<string>('');
+  const selectField2 = useSignal<string>('');
+  const selectField3 = useSignal<string>('');
+  const selectField4 = useSignal<string>('');
+  const selectField5 = useSignal<string>('');
+  const selectField6 = useSignal<string>('');
+
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {
     // Read values from localStorage on component mount
@@ -344,24 +352,38 @@ export default component$(() => {
         <div class="w-full space-y-2">
           <div class="text-2xl">SelectField</div>
           <div class="flex flex-wrap gap-4">
-            <div class="w-sm">
-              <SelectField label="Traditional (with children)">
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-              </SelectField>
-            </div>
-            <div class="w-sm">
+            <div class="flex w-sm flex-col">
               <SelectField
-                label="With placeholder"
-                placeholder="Choose an option..."
+                label="Traditional (with children)"
+                onChangeValue$={(value) => {
+                  selectField1.value = value;
+                }}
               >
                 <option value="1">Option 1</option>
                 <option value="2">Option 2</option>
                 <option value="3">Option 3</option>
               </SelectField>
+              <div class="px-2 text-sm opacity-70">
+                Selected: {selectField1.value || 'None'}
+              </div>
             </div>
-            <div class="w-sm">
+            <div class="flex w-sm flex-col">
+              <SelectField
+                label="With placeholder"
+                placeholder="Choose an option..."
+                onChangeValue$={(value) => {
+                  selectField2.value = value;
+                }}
+              >
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+              </SelectField>
+              <div class="px-2 text-sm opacity-70">
+                Selected: {selectField2.value || 'None'}
+              </div>
+            </div>
+            <div class="flex w-sm flex-col">
               <SelectField
                 label="Using options prop"
                 options={{
@@ -369,9 +391,15 @@ export default component$(() => {
                   Green: 'green',
                   Blue: 'blue',
                 }}
+                onChangeValue$={(value) => {
+                  selectField3.value = value;
+                }}
               />
+              <div class="px-2 text-sm opacity-70">
+                Selected: {selectField3.value || 'None'}
+              </div>
             </div>
-            <div class="w-sm">
+            <div class="flex w-sm flex-col">
               <SelectField
                 label="Placeholder + options"
                 placeholder="Select a fruit..."
@@ -381,16 +409,28 @@ export default component$(() => {
                   Orange: 'orange',
                   Grape: 'grape',
                 }}
+                onChangeValue$={(value) => {
+                  selectField4.value = value;
+                }}
               />
+              <div class="px-2 text-sm opacity-70">
+                Selected: {selectField4.value || 'None'}
+              </div>
             </div>
-            <div class="w-sm">
+            <div class="flex w-sm flex-col">
               <SelectField
                 label="Using array (label=value)"
                 placeholder="Select a size..."
                 options={['Small', 'Medium', 'Large', 'X-Large']}
+                onChangeValue$={(value) => {
+                  selectField5.value = value;
+                }}
               />
+              <div class="px-2 text-sm opacity-70">
+                Selected: {selectField5.value || 'None'}
+              </div>
             </div>
-            <div class="w-sm">
+            <div class="flex w-sm flex-col">
               <SelectField
                 label="With error state"
                 placeholder="Select one..."
@@ -400,7 +440,13 @@ export default component$(() => {
                   'Option 2': '2',
                   'Option 3': '3',
                 }}
+                onChangeValue$={(value) => {
+                  selectField6.value = value;
+                }}
               />
+              <div class="px-2 text-sm opacity-70">
+                Selected: {selectField6.value || 'None'}
+              </div>
             </div>
           </div>
         </div>
