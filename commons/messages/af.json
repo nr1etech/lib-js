@@ -4,5 +4,6 @@
   "v_atMost": "Moet hoogstens {max} wees",
   "v_invalidValue": "Nie 'n geldige waarde nie",
   "v_NaN": "Moet 'n getal wees",
-  "v_overPrecision": "Mag slegs {fractionDigits} desimale plekke hê"
+  "v_overPrecision": "Mag slegs {fractionDigits} desimale plekke hê",
+  "v_length": "Moet {length} karakters lank wees"
 }

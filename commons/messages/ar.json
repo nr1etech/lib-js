@@ -4,5 +4,6 @@
   "v_atMost": "يجب ألا يتجاوز {max}",
   "v_invalidValue": "قيمة غير صالحة",
   "v_NaN": "يجب أن يكون رقمًا",
-  "v_overPrecision": "قد يحتوي فقط على {fractionDigits} منزلة عشرية"
+  "v_overPrecision": "قد يحتوي فقط على {fractionDigits} منزلة عشرية",
+  "v_length": "يجب أن يكون طوله {length} حرفًا"
 }

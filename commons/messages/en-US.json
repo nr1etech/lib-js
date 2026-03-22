@@ -4,5 +4,6 @@
   "v_atMost": "Must be at most {max}",
   "v_invalidValue": "Not a valid value",
   "v_NaN": "Must be a number",
-  "v_overPrecision": "May only have {fractionDigits} decimal places"
+  "v_overPrecision": "May only have {fractionDigits} decimal places",
+  "v_length": "Must be {length} characters long"
 }
