@@ -345,25 +345,62 @@ export default component$(() => {
           <div class="text-2xl">SelectField</div>
           <div class="flex flex-wrap gap-4">
             <div class="w-sm">
-              <SelectField label="Select one">
+              <SelectField label="Traditional (with children)">
                 <option value="1">Option 1</option>
                 <option value="2">Option 2</option>
                 <option value="3">Option 3</option>
               </SelectField>
             </div>
             <div class="w-sm">
-              <SelectField label="Select one">
+              <SelectField
+                label="With placeholder"
+                placeholder="Choose an option..."
+              >
                 <option value="1">Option 1</option>
                 <option value="2">Option 2</option>
                 <option value="3">Option 3</option>
               </SelectField>
             </div>
             <div class="w-sm">
-              <SelectField label="Select one" error="Something bad happened">
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-              </SelectField>
+              <SelectField
+                label="Using options prop"
+                options={{
+                  Red: 'red',
+                  Green: 'green',
+                  Blue: 'blue',
+                }}
+              />
+            </div>
+            <div class="w-sm">
+              <SelectField
+                label="Placeholder + options"
+                placeholder="Select a fruit..."
+                options={{
+                  Apple: 'apple',
+                  Banana: 'banana',
+                  Orange: 'orange',
+                  Grape: 'grape',
+                }}
+              />
+            </div>
+            <div class="w-sm">
+              <SelectField
+                label="Using array (label=value)"
+                placeholder="Select a size..."
+                options={['Small', 'Medium', 'Large', 'X-Large']}
+              />
+            </div>
+            <div class="w-sm">
+              <SelectField
+                label="With error state"
+                placeholder="Select one..."
+                error="Something bad happened"
+                options={{
+                  'Option 1': '1',
+                  'Option 2': '2',
+                  'Option 3': '3',
+                }}
+              />
             </div>
           </div>
         </div>
