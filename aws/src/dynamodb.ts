@@ -743,7 +743,7 @@ export async function executeGet<T>(
   key: Record<string, unknown>,
   options: {
     client?: DynamoDBDocumentClient;
-    prefix?: string;
+    prefix?: string | null;
   } = {},
 ): Promise<T | null> {
   const dynamoDBDocumentClient = options.client ?? getDynamoDBDocumentClient();
@@ -791,7 +791,7 @@ export async function executeGetFromIndex<T>(
   key: Record<string, unknown>,
   options: {
     client?: DynamoDBDocumentClient;
-    prefix?: string;
+    prefix?: string | null;
   } = {},
 ): Promise<T | null> {
   const dynamoDBDocumentClient = options.client ?? getDynamoDBDocumentClient();
