@@ -749,14 +749,16 @@ export async function executeGet<T>(params: {
   key: Record<string, unknown>;
   client?: DynamoDBDocumentClient;
   prefix?: string | null;
+  consistentRead?: boolean;
 }): Promise<T | null> {
-  const {tableName, key, client, prefix} = params;
+  const {tableName, key, client, prefix, consistentRead} = params;
   const dynamoDBDocumentClient = client ?? getDynamoDBDocumentClient();
 
   const result = await dynamoDBDocumentClient.send(
     new GetCommand({
       TableName: tableName,
       Key: key,
+      ConsistentRead: consistentRead ?? false,
     }),
   );
 
