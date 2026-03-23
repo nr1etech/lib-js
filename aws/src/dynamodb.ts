@@ -593,13 +593,13 @@ export async function executeUpdate<T>(
  * if you want to allow replacing existing items.
  *
  * @template T - The type of the returned item
- * @param item - The complete item to put into the table, including the primary key
- * @param tableName - The name of the DynamoDB table
- * @param key - The primary key of the item (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`). Used for the preventOverwrite condition.
- * @param options - Configuration options
- * @param options.client - Custom DynamoDB Document Client instance (defaults to singleton client)
- * @param options.preventOverwrite - If true, the put will fail if an item with the same key already exists (default: true)
- * @param options.returnValues - Specify what values to return. 'NONE' (default) or 'ALL_OLD' to return the previous item
+ * @param params - Configuration parameters
+ * @param params.item - The complete item to put into the table, including the primary key
+ * @param params.tableName - The name of the DynamoDB table
+ * @param params.key - The primary key of the item (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`). Used for the preventOverwrite condition.
+ * @param params.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @param params.preventOverwrite - If true, the put will fail if an item with the same key already exists (default: true)
+ * @param params.returnValues - Specify what values to return. 'NONE' (default) or 'ALL_OLD' to return the previous item
  * @returns The item that was put (or the old item if returnValues is 'ALL_OLD')
  *
  * @throws {ConditionalCheckFailedException} When preventOverwrite is true and the item already exists
@@ -608,8 +608,8 @@ export async function executeUpdate<T>(
  * @example
  * ```typescript
  * // Create a new user (will fail if already exists - default behavior)
- * const user = await executePut<User>(
- *   {
+ * const user = await executePut<User>({
+ *   item: {
  *     Pk: 'User#123',
  *     Sk: 'Profile',
  *     Detail: {
@@ -618,49 +618,55 @@ export async function executeUpdate<T>(
  *       createdAt: new Date().toISOString()
  *     }
  *   },
- *   'MyTable',
- *   { Pk: 'User#123', Sk: 'Profile' }
- * );
+ *   tableName: 'MyTable',
+ *   key: { Pk: 'User#123', Sk: 'Profile' }
+ * });
  * // Throws ConditionalCheckFailedException if User#123 already exists
  *
  * // Allow overwriting existing item
- * const user = await executePut<User>(
- *   {
+ * const user = await executePut<User>({
+ *   item: {
  *     Pk: 'User#456',
  *     Sk: 'Profile',
  *     Detail: { name: 'Jane Doe', email: 'jane@example.com' }
  *   },
- *   'MyTable',
- *   { Pk: 'User#456', Sk: 'Profile' },
- *   { preventOverwrite: false }
- * );
+ *   tableName: 'MyTable',
+ *   key: { Pk: 'User#456', Sk: 'Profile' },
+ *   preventOverwrite: false
+ * });
  * // Will replace the item if User#456 already exists
  *
  * // Replace item and return the old version
- * const oldUser = await executePut<User>(
- *   {
+ * const oldUser = await executePut<User>({
+ *   item: {
  *     Pk: 'User#789',
  *     Sk: 'Profile',
  *     Detail: { name: 'Updated Name', email: 'updated@example.com' }
  *   },
- *   'MyTable',
- *   { Pk: 'User#789', Sk: 'Profile' },
- *   { preventOverwrite: false, returnValues: 'ALL_OLD' }
- * );
+ *   tableName: 'MyTable',
+ *   key: { Pk: 'User#789', Sk: 'Profile' },
+ *   preventOverwrite: false,
+ *   returnValues: 'ALL_OLD'
+ * });
  * // Returns the previous item data
  * ```
  */
-export async function executePut<T>(
-  item: Record<string, unknown>,
-  tableName: string,
-  key: Record<string, unknown>,
-  options: {
-    client?: DynamoDBDocumentClient;
-    preventOverwrite?: boolean;
-    returnValues?: 'NONE' | 'ALL_OLD';
-  } = {},
-): Promise<T | undefined> {
-  const {client, preventOverwrite = true, returnValues = 'NONE'} = options;
+export async function executePut<T>(params: {
+  item: Record<string, unknown>;
+  tableName: string;
+  key: Record<string, unknown>;
+  client?: DynamoDBDocumentClient;
+  preventOverwrite?: boolean;
+  returnValues?: 'NONE' | 'ALL_OLD';
+}): Promise<T | undefined> {
+  const {
+    item,
+    tableName,
+    key,
+    client,
+    preventOverwrite = true,
+    returnValues = 'NONE',
+  } = params;
 
   const dynamoDBDocumentClient = client ?? getDynamoDBDocumentClient();
 
@@ -696,24 +702,23 @@ export async function executePut<T>(
 /**
  * Executes a DynamoDB delete operation to remove an item from the table.
  *
- * @param tableName - The name of the DynamoDB table
- * @param key - The primary key of the item to delete (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`)
- * @param options - Configuration options
- * @param options.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @param params - Configuration parameters
+ * @param params.tableName - The name of the DynamoDB table
+ * @param params.key - The primary key of the item to delete (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`)
+ * @param params.client - Custom DynamoDB Document Client instance (defaults to singleton client)
  *
  * @example
  * ```typescript
- * await executeDelete('MyTable', { Pk: 'User#123', Sk: 'Profile' });
+ * await executeDelete({ tableName: 'MyTable', key: { Pk: 'User#123', Sk: 'Profile' } });
  * ```
  */
-export async function executeDelete(
-  tableName: string,
-  key: Record<string, unknown>,
-  options: {
-    client?: DynamoDBDocumentClient;
-  } = {},
-): Promise<void> {
-  const dynamoDBDocumentClient = options.client ?? getDynamoDBDocumentClient();
+export async function executeDelete(params: {
+  tableName: string;
+  key: Record<string, unknown>;
+  client?: DynamoDBDocumentClient;
+}): Promise<void> {
+  const {tableName, key, client} = params;
+  const dynamoDBDocumentClient = client ?? getDynamoDBDocumentClient();
 
   await dynamoDBDocumentClient.send(
     new DeleteCommand({
@@ -727,26 +732,26 @@ export async function executeDelete(
  * Executes a DynamoDB get operation to retrieve an item from the table.
  *
  * @template T - The type of the returned item
- * @param tableName - The name of the DynamoDB table
- * @param key - The primary key of the item to retrieve (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`)
- * @param options - Configuration options
- * @param options.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @param params - Configuration parameters
+ * @param params.tableName - The name of the DynamoDB table
+ * @param params.key - The primary key of the item to retrieve (e.g., `{ Pk: 'User#123', Sk: 'Profile' }`)
+ * @param params.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @param params.prefix - Prefix for nested object retrieval. Set to null for full item, or specify a prefix like 'Detail' (default)
  * @returns The item if found, or null if not found
  *
  * @example
  * ```typescript
- * const user = await executeGet<User>('MyTable', { Pk: 'User#123', Sk: 'Profile' });
+ * const user = await executeGet<User>({ tableName: 'MyTable', key: { Pk: 'User#123', Sk: 'Profile' } });
  * ```
  */
-export async function executeGet<T>(
-  tableName: string,
-  key: Record<string, unknown>,
-  options: {
-    client?: DynamoDBDocumentClient;
-    prefix?: string | null;
-  } = {},
-): Promise<T | null> {
-  const dynamoDBDocumentClient = options.client ?? getDynamoDBDocumentClient();
+export async function executeGet<T>(params: {
+  tableName: string;
+  key: Record<string, unknown>;
+  client?: DynamoDBDocumentClient;
+  prefix?: string | null;
+}): Promise<T | null> {
+  const {tableName, key, client, prefix} = params;
+  const dynamoDBDocumentClient = client ?? getDynamoDBDocumentClient();
 
   const result = await dynamoDBDocumentClient.send(
     new GetCommand({
@@ -756,10 +761,10 @@ export async function executeGet<T>(
   );
 
   const item = result.Item;
-  if (options.prefix) {
-    return (item?.[options.prefix] as T) ?? null;
+  if (prefix) {
+    return (item?.[prefix] as T) ?? null;
   }
-  if (options.prefix === null) {
+  if (prefix === null) {
     return (item as T) ?? null;
   }
   return (item?.Detail as T) ?? null;
@@ -769,32 +774,40 @@ export async function executeGet<T>(
  * Executes a DynamoDB query on a secondary index and returns the first matching item.
  *
  * @template T - The type of the returned item
- * @param tableName - The name of the DynamoDB table
- * @param indexName - The name of the secondary index to query
- * @param key - The key attributes to query (e.g., `{ Gs1Pk: 'User#123' }` or `{ Gs1Pk: 'User#123', Gs1Sk: 'Profile' }`)
- * @param options - Configuration options
- * @param options.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @param params - Configuration parameters
+ * @param params.tableName - The name of the DynamoDB table
+ * @param params.indexName - The name of the secondary index to query
+ * @param params.key - The key attributes to query (e.g., `{ Gs1Pk: 'User#123' }` or `{ Gs1Pk: 'User#123', Gs1Sk: 'Profile' }`)
+ * @param params.client - Custom DynamoDB Document Client instance (defaults to singleton client)
+ * @param params.prefix - Prefix for nested object retrieval. Set to null for full item, or specify a prefix like 'Detail' (default)
  * @returns The first matching item if found, or null if not found
  *
  * @example
  * ```typescript
  * // Query with just partition key
- * const user = await executeGetFromIndex<User>('MyTable', 'Gs1', { Gs1Pk: 'User#123' });
+ * const user = await executeGetFromIndex<User>({
+ *   tableName: 'MyTable',
+ *   indexName: 'Gs1',
+ *   key: { Gs1Pk: 'User#123' }
+ * });
  *
  * // Query with partition and sort key
- * const user = await executeGetFromIndex<User>('MyTable', 'Gs1', { Gs1Pk: 'User#123', Gs1Sk: 'Profile' });
+ * const user = await executeGetFromIndex<User>({
+ *   tableName: 'MyTable',
+ *   indexName: 'Gs1',
+ *   key: { Gs1Pk: 'User#123', Gs1Sk: 'Profile' }
+ * });
  * ```
  */
-export async function executeGetFromIndex<T>(
-  tableName: string,
-  indexName: string,
-  key: Record<string, unknown>,
-  options: {
-    client?: DynamoDBDocumentClient;
-    prefix?: string | null;
-  } = {},
-): Promise<T | null> {
-  const dynamoDBDocumentClient = options.client ?? getDynamoDBDocumentClient();
+export async function executeGetFromIndex<T>(params: {
+  tableName: string;
+  indexName: string;
+  key: Record<string, unknown>;
+  client?: DynamoDBDocumentClient;
+  prefix?: string | null;
+}): Promise<T | null> {
+  const {tableName, indexName, key, client, prefix} = params;
+  const dynamoDBDocumentClient = client ?? getDynamoDBDocumentClient();
 
   // Build KeyConditionExpression and ExpressionAttributeValues from key object
   const keyConditions: string[] = [];
@@ -816,10 +829,10 @@ export async function executeGetFromIndex<T>(
   );
 
   const item = result.Items?.[0];
-  if (options.prefix) {
-    return (item?.[options.prefix] as T) ?? null;
+  if (prefix) {
+    return (item?.[prefix] as T) ?? null;
   }
-  if (options.prefix === null) {
+  if (prefix === null) {
     return (item as T) ?? null;
   }
   return (item?.Detail as T) ?? null;
