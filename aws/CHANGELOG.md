@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.10
+### Patch Changes
+
+- 27d6c3b: Added consistentRead to executeGet
+
 ## 1.0.9
 ### Patch Changes
 
