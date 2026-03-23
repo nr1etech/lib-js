@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.9
+### Patch Changes
+
+- 8eabf11: Refactored execute functions for DynamoDB
+
 ## 1.0.8
 ### Patch Changes
 
