@@ -260,6 +260,11 @@ export * from './components/brands/plaid-icon';
 export * from './components/brands/plaid-icon-bw';
 export * from './components/brands/plaid-logo-bw';
 
+// Brands - FlexPay
+export * from './components/brands/flex-pay-icon';
+export * from './components/brands/flex-pay-logo';
+export * from './components/brands/flex-pay-logo-stacked';
+
 // Brands - ClientLoop
 export * from './components/brands/clientloop-icon-on-dark-blue';
 export * from './components/brands/clientloop-icon-on-light-blue';

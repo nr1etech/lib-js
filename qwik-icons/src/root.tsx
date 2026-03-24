@@ -9,6 +9,9 @@ import {
   PlaidIcon,
   PlaidIconBw,
   PlaidLogoBw,
+  FlexPayIcon,
+  FlexPayLogo,
+  FlexPayLogoStacked,
   FlagAe1x1,
   FlagAe4x3,
   FlagAu1x1,
@@ -604,6 +607,7 @@ export default component$(() => {
     },
     {component: PlaidIcon, name: 'PlaidIcon'},
     {component: PlaidIconBw, name: 'PlaidIconBw'},
+    {component: FlexPayIcon, name: 'FlexPayIcon'},
   ];
 
   const brandLogos = [
@@ -698,6 +702,8 @@ export default component$(() => {
       name: 'TriggerPointLogoTaglineVioletLightBg',
     },
     {component: PlaidLogoBw, name: 'PlaidLogoBw'},
+    {component: FlexPayLogo, name: 'FlexPayLogo'},
+    {component: FlexPayLogoStacked, name: 'FlexPayLogoStacked'},
   ];
 
   const flagIcons = [
