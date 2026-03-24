@@ -1,5 +1,10 @@
 # @nr1e/qwik-icons
 
+## 0.0.35
+### Patch Changes
+
+- 31d85ba: Added FlexPay icons
+
 ## 0.0.34
 ### Patch Changes
 
