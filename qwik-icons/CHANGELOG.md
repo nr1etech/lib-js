@@ -1,5 +1,10 @@
 # @nr1e/qwik-icons
 
+## 0.0.36
+### Patch Changes
+
+- 9f08f36: Added additional icons
+
 ## 0.0.35
 ### Patch Changes
 
