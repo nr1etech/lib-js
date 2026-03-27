@@ -184,7 +184,7 @@ jobs:
         run: pnpm run site
       - name: Setup GitHub Pages
         if: matrix.node-version == inputs.publish-node-version && github.ref == env.SITE_BRANCH_REF
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Upload Site
         if: matrix.node-version == inputs.publish-node-version && github.ref == env.SITE_BRANCH_REF
         uses: actions/upload-pages-artifact@v4
