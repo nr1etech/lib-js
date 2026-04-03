@@ -283,7 +283,7 @@ export interface PaginatedResult<T> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function executePaginatedQuery<T = any>(
   params: {
-    client: DynamoDBDocumentClient;
+    client?: DynamoDBDocumentClient;
     query: Omit<
       QueryCommandInput,
       'ExclusiveStartKey' | 'Limit' | 'ScanIndexForward'
@@ -313,7 +313,7 @@ export async function executePaginatedQuery<T = any>(
   const direction = getDirection(decodedCursor, pagination?.direction);
 
   // Execute query with calculated pagination parameters
-  const result = await client.send(
+  const result = await (client ?? getDynamoDBDocumentClient()).send(
     new QueryCommand({
       ...query,
       Limit: limit,
