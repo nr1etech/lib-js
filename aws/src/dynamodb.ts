@@ -772,6 +772,58 @@ export async function executeGet<T>(params: {
   return (item?.Detail as T) ?? null;
 }
 
+export type QueryOperator = '=' | 'begins_with';
+
+export async function executeQuery<T>(params: {
+  tableName: string;
+  indexName?: string;
+  pkName?: string;
+  pkValue: string;
+  skName?: string;
+  skValue: string;
+  operator: QueryOperator;
+  client?: DynamoDBDocumentClient;
+  prefix?: string | null;
+  limit?: number;
+}): Promise<T[]> {
+  const {
+    tableName,
+    indexName,
+    pkValue,
+    skValue,
+    operator,
+    client,
+    prefix,
+    limit,
+  } = params;
+
+  const pkName = params.pkName ?? `${indexName ?? ''}Pk`;
+  const skName = params.skName ?? `${indexName ?? ''}Sk`;
+
+  const dynamoDBDocumentClient = client ?? getDynamoDBDocumentClient();
+
+  // Build KeyConditionExpression and ExpressionAttributeValues from key object
+  const keyConditions: string[] = [];
+  const expressionAttributeValues: Record<string, unknown> = {};
+
+  keyConditions.push(`${pkName} = :${pkName}`);
+  expressionAttributeValues[`:${pkName}`] = pkValue;
+  keyConditions.push(`${skName} ${operator} :${skName}`);
+  expressionAttributeValues[`:${skName}`] = skValue;
+
+  const result = await dynamoDBDocumentClient.send(
+    new QueryCommand({
+      TableName: tableName,
+      IndexName: indexName,
+      KeyConditionExpression: keyConditions.join(' AND '),
+      ExpressionAttributeValues: expressionAttributeValues,
+      Limit: limit ?? 1000,
+    }),
+  );
+  const items = result.Items?.map((item) => item[prefix ?? 'Detail'] as T);
+  return items ?? [];
+}
+
 /**
  * Executes a DynamoDB query on a secondary index and returns the first matching item.
  *
