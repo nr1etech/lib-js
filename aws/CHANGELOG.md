@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.11
+### Patch Changes
+
+- f718425: Made client optional in executePaginatedQuery
+
 ## 1.0.10
 ### Patch Changes
 
