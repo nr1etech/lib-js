@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.12
+### Patch Changes
+
+- 16bdfe2: Added executeQuery
+
 ## 1.0.11
 ### Patch Changes
 
