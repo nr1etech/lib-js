@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.13
+### Patch Changes
+
+- 0805f64: Refactored executeQuery
+
 ## 1.0.12
 ### Patch Changes
 
