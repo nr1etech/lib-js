@@ -794,7 +794,7 @@ export async function executeQuery<T = any>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mapItem: (item: Record<string, any>) => T;
   },
-  limit: number,
+  limit?: number,
   scanIndexForward?: boolean,
 ): Promise<T[]> {
   const {client, query, mapItem} = params;
