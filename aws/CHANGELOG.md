@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.15
+### Patch Changes
+
+- 495f435: Modified executePut to ensure item contains key
+
 ## 1.0.14
 ### Patch Changes
 
