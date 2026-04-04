@@ -772,56 +772,43 @@ export async function executeGet<T>(params: {
   return (item?.Detail as T) ?? null;
 }
 
-export type QueryOperator = '=' | 'begins_with';
-
-export async function executeQuery<T>(params: {
-  tableName: string;
-  indexName?: string;
-  pkName?: string;
-  pkValue: string;
-  skName?: string;
-  skValue: string;
-  operator: QueryOperator;
-  client?: DynamoDBDocumentClient;
-  prefix?: string | null;
-  limit?: number;
-}): Promise<T[]> {
-  const {
-    tableName,
-    indexName,
-    pkValue,
-    skValue,
-    operator,
-    client,
-    prefix,
-    limit,
-  } = params;
-
-  const pkName = params.pkName ?? `${indexName ?? ''}Pk`;
-  const skName = params.skName ?? `${indexName ?? ''}Sk`;
-
-  const dynamoDBDocumentClient = client ?? getDynamoDBDocumentClient();
-
-  // Build KeyConditionExpression and ExpressionAttributeValues from key object
-  const keyConditions: string[] = [];
-  const expressionAttributeValues: Record<string, unknown> = {};
-
-  keyConditions.push(`${pkName} = :${pkName}`);
-  expressionAttributeValues[`:${pkName}`] = pkValue;
-  keyConditions.push(`${skName} ${operator} :${skName}`);
-  expressionAttributeValues[`:${skName}`] = skValue;
-
-  const result = await dynamoDBDocumentClient.send(
+/**
+ * Executes a DynamoDB query.
+ *
+ * @param params Configuration for the scan and item mapping
+ * @param params.client DynamoDB Document Client instance
+ * @param params.scan ScanCommand input (without ExclusiveStartKey or Limit)
+ * @param params.keyNames Array of key attribute names for the table
+ * @param params.mapItem Function to transform raw DynamoDB items into desired format
+ * @param limit Number of items per page (locked after first request)
+ * @param scanIndexForward Optional flag to control the scan direction (default: true)
+ * @returns The items retrieved from the query
+ */
+export async function executeQuery<T = any>(
+  params: {
+    client?: DynamoDBDocumentClient;
+    query: Omit<
+      QueryCommandInput,
+      'ExclusiveStartKey' | 'Limit' | 'ScanIndexForward'
+    >;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mapItem: (item: Record<string, any>) => T;
+  },
+  limit: number,
+  scanIndexForward?: boolean,
+): Promise<T[]> {
+  const {client, query, mapItem} = params;
+  if (limit && limit <= 0) {
+    throw new Error('Pagination limit must be a positive number');
+  }
+  const result = await (client ?? getDynamoDBDocumentClient()).send(
     new QueryCommand({
-      TableName: tableName,
-      IndexName: indexName,
-      KeyConditionExpression: keyConditions.join(' AND '),
-      ExpressionAttributeValues: expressionAttributeValues,
+      ...query,
       Limit: limit ?? 1000,
+      ScanIndexForward: scanIndexForward,
     }),
   );
-  const items = result.Items?.map((item) => item[prefix ?? 'Detail'] as T);
-  return items ?? [];
+  return (result.Items ?? []).map(mapItem);
 }
 
 /**
