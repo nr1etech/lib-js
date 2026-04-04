@@ -1,5 +1,10 @@
 # @nr1e/aws
 
+## 1.0.14
+### Patch Changes
+
+- 17a4733: Made limit optiona;
+
 ## 1.0.13
 ### Patch Changes
 
