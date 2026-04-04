@@ -672,7 +672,10 @@ export async function executePut<T>(params: {
 
   const putCommandInput: PutCommandInput = {
     TableName: tableName,
-    Item: item,
+    Item: {
+      ...key,
+      ...item,
+    },
     ReturnValues: returnValues,
   };
 
