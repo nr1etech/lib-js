@@ -61,8 +61,8 @@ catalogs:
       specifier: ^3.1.9
       version: 3.1.9
     '@inlang/paraglide-js':
-      specifier: ^2.15.2
-      version: 2.15.2
+      specifier: ^2.15.3
+      version: 2.15.3
     '@lucia-auth/adapter-test':
       specifier: ^5.0.2
       version: 5.0.2
@@ -262,7 +262,7 @@ importers:
         version: 3.1.9
       '@inlang/paraglide-js':
         specifier: 'catalog:'
-        version: 2.15.2
+        version: 2.15.3
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.13
@@ -457,7 +457,7 @@ importers:
         version: 3.1.9
       '@inlang/paraglide-js':
         specifier: 'catalog:'
-        version: 2.15.2
+        version: 2.15.3
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.2.2(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.32.0)(yaml@2.8.2))
@@ -1255,8 +1255,8 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  '@inlang/paraglide-js@2.15.2':
-    resolution: {integrity: sha512-1S2jBvc8jzJAZFRf3gKu3Z2+9zQRhvIzALEE4vvWDNIoiiOn0vF3cJHf3xFqgfN/JY5IVS//zQsvAT0jWXH69g==}
+  '@inlang/paraglide-js@2.15.3':
+    resolution: {integrity: sha512-gneANUhYEPnSjxbKp3QCwmMqQecG+1QWuJSAl3jiPprn2+LeaZu3BgnofRKpo8gkYzB6oE3AY2ecZBXu3UrpOw==}
     hasBin: true
 
   '@inlang/recommend-sherlock@0.2.1':
@@ -7283,7 +7283,7 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
 
-  '@inlang/paraglide-js@2.15.2':
+  '@inlang/paraglide-js@2.15.3':
     dependencies:
       '@inlang/recommend-sherlock': 0.2.1
       '@inlang/sdk': 2.9.1
