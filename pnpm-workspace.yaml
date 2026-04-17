@@ -39,7 +39,7 @@ catalog:
   "ksuid": "3.0.0"
   "libphonenumber-js": "^1.12.41"
   "lucia": "^3.2.2"
-  "nanoid": "^5.1.7"
+  "nanoid": "^5.1.9"
   "np": "^11.1.0"
   "openapi-typescript": "7.13.0"
   "pino": "^10.3.1"
