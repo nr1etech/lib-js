@@ -121,8 +121,8 @@ catalogs:
       specifier: ^4.2.1
       version: 4.2.1
     tailwindcss:
-      specifier: ^4.2.2
-      version: 4.2.2
+      specifier: ^4.2.3
+      version: 4.2.3
     tailwindcss-animated:
       specifier: 2.0.0
       version: 2.0.0
@@ -444,7 +444,7 @@ importers:
         version: link:../qwik-icons
       tailwindcss-animated:
         specifier: 'catalog:'
-        version: 2.0.0(tailwindcss@4.2.2)
+        version: 2.0.0(tailwindcss@4.2.3)
     devDependencies:
       '@builder.io/qwik':
         specifier: 'catalog:'
@@ -487,7 +487,7 @@ importers:
         version: 0.7.2(prettier@3.8.3)
       tailwindcss:
         specifier: 'catalog:'
-        version: 4.2.2
+        version: 4.2.3
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -5193,6 +5193,9 @@ packages:
 
   tailwindcss@4.2.2:
     resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}
+
+  tailwindcss@4.2.3:
+    resolution: {integrity: sha512-fA/NX5gMf0ooCLISgB0wScaWgaj6rjTN2SVAwleURjiya7ITNkV+VMmoHtKkldP6CIZoYCZyxb8zP/e2TWoEtQ==}
 
   tapable@2.3.0:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
@@ -11859,11 +11862,13 @@ snapshots:
 
   tagged-tag@1.0.0: {}
 
-  tailwindcss-animated@2.0.0(tailwindcss@4.2.2):
+  tailwindcss-animated@2.0.0(tailwindcss@4.2.3):
     dependencies:
-      tailwindcss: 4.2.2
+      tailwindcss: 4.2.3
 
   tailwindcss@4.2.2: {}
+
+  tailwindcss@4.2.3: {}
 
   tapable@2.3.0: {}
 
