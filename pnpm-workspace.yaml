@@ -47,7 +47,7 @@ catalog:
   "prettier": "3.8.3"
   "prettier-plugin-tailwindcss": "^0.7.1"
   "sonic-boom": "^4.2.1"
-  "tailwindcss": "^4.2.3"
+  "tailwindcss": "^4.2.4"
   "tailwindcss-animated": "2.0.0"
   "testcontainers": "^11.14.0"
   "typescript": "5.9.3"
