@@ -50,7 +50,7 @@ catalog:
   "tailwindcss": "^4.2.4"
   "tailwindcss-animated": "2.0.0"
   "testcontainers": "^11.14.0"
-  "typescript": "5.9.3"
+  "typescript": "6.0.3"
   "typescript-eslint": "8.59.0"
   "undici": "*"
   "uuid": "^13.0.0"
