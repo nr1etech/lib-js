@@ -118,8 +118,8 @@ catalogs:
       specifier: ^0.7.1
       version: 0.7.2
     sonic-boom:
-      specifier: ^4.2.1
-      version: 4.2.1
+      specifier: ^5.0.0
+      version: 5.0.0
     tailwindcss:
       specifier: ^4.2.4
       version: 4.2.4
@@ -325,7 +325,7 @@ importers:
         version: 3.0.0
       sonic-boom:
         specifier: 'catalog:'
-        version: 4.2.1
+        version: 5.0.0
     devDependencies:
       '@eslint/js':
         specifier: 'catalog:'
@@ -5030,6 +5030,9 @@ packages:
 
   sonic-boom@4.2.1:
     resolution: {integrity: sha512-w6AxtubXa2wTXAUsZMMWERrsIRAdrK0Sc+FUytWvYAhBJLyuI4llrMIC1DtlNSdI99EI86KZum2MMq3EAZlF9Q==}
+
+  sonic-boom@5.0.0:
+    resolution: {integrity: sha512-znaUCPgeMBOX0vAuccd6GmnxtraZSB2y6VKepSPhG9P4A6Dvw2MKFVt12036vrSZqN9mWAt6oM1239/lPYyM4w==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -11684,6 +11687,10 @@ snapshots:
   slice-ansi@0.0.4: {}
 
   sonic-boom@4.2.1:
+    dependencies:
+      atomic-sleep: 1.0.0
+
+  sonic-boom@5.0.0:
     dependencies:
       atomic-sleep: 1.0.0
 
