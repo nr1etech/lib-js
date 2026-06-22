@@ -1,5 +1,7 @@
 export * from './components/add-button';
 export * from './components/alert-error';
+export * from './components/editable-select-field';
+export * from './components/editable-text-field';
 export * from './components/alert-info';
 export * from './components/alert-success';
 export * from './components/alert-warning';
